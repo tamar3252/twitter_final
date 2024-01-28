@@ -1,4 +1,4 @@
-const { getAllTweets, getTweetsWithFollower, getTweet, addTweet,deleteTweet } = require('./Tweet.repository')
+const { getAllTweets, getTweetsWithFollower, getTweet, addTweet,addComment,deleteTweet } = require('./Tweet.repository')
 const { Request: ExpressRequest } = require("express");
 
 
@@ -23,9 +23,10 @@ export const getTweetsWithFollowerFunc = async (req: typeof ExpressRequest) => {
     }
 }
 
-export const getTweetFunc = async () => {
+export const getTweetFunc = async (req: typeof ExpressRequest) => {
+    const tweetId=req.body.tweet_id
     try {
-        const tweet = await getTweet()
+        const tweet = await getTweet(tweetId)
         return { status: 200, value: tweet }
     }
     catch (err) {
@@ -34,6 +35,7 @@ export const getTweetFunc = async () => {
 }
 export const addTweetFunc = async (req: typeof ExpressRequest) => {
     const userId = req.tokenData.user_id;
+
     // let tweet = req.body.tweet
     // tweet.user_id = userId
     const tweet={
@@ -48,9 +50,27 @@ export const addTweetFunc = async (req: typeof ExpressRequest) => {
         return { status: 500, value: err.message }
     }
 }
+export const addCommentFunc = async (req: typeof ExpressRequest) => {
+    const userId = req.tokenData.user_id;
+    const tweetId=req.body.tweetId
+    const comment={
+        text:req.body.text,
+        user_id:userId
+    }
+    try {
+        await addComment(comment,tweetId)
+        return { status: 200, value: comment }
+    }
+    catch (err) {
+        return { status: 500, value: err.message }
+    }
+}
 export const deleteTweetFunc = async (req: typeof ExpressRequest) => {
     const userId = req.tokenData.user_id;
-    let tweetId = req.body.tweetId
+    console.log('kkkkk',userId);
+    
+    const tweetId = req.params.tweet_id;
+
     try {
         const respose= await deleteTweet(tweetId,userId)
         if(!respose){
