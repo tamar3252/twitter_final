@@ -7,7 +7,7 @@ export const getAllTweets = async () => {
 }
 export const getTweetsWithFollower = async (userId: String) => {
     const tweetsWithFollower = []
-    const followers =( await UserModel.findOne({ _id: userId })).follows
+    const followers = (await UserModel.findOne({ _id: userId })).follows
     for (const id of followers) {
         tweetsWithFollower.push(await TweetModel.find({ user_id: id }))
     }
@@ -58,41 +58,25 @@ export const addComment = async (commentObj: Object, tweetId: String) => {
 // }
 
 export const deleteTweet = async (tweetId: String, userId: String) => {
-
-//     const session = await mongoose.startSession();
-// session.startTransaction();
-
-// try {
-//   await deleteTweet(tweetId, userId, session);
-//   await session.commitTransaction();
-//   session.endSession();
-// } catch (error) {
-//   await session.abortTransaction();
-//   session.endSession();
-//   console.error('Error during transaction:', error.message);
-// }
-
-
-
     let tweetsComments;
 
     const user = await UserModel.findOne({ _id: userId });
     if (!user) {
-        return;
+        throw new Error()
     }
 
     const userRole = user.role;
     if (userRole === "admin") {
         const tweet = await TweetModel.findOne({ _id: tweetId }).populate('user_id');
         if (!tweet || tweet.user_id.role === "admin") {
-            return;
+            throw new Error()
         }
         tweetsComments = tweet.comments;
     }
     else {
         const userTweet = await TweetModel.findOne({ user_id: userId, _id: tweetId });
         if (!userTweet) {
-            return;
+            throw new Error()
         }
         tweetsComments = userTweet.comments;
     }
@@ -101,15 +85,18 @@ export const deleteTweet = async (tweetId: String, userId: String) => {
         return await TweetModel.deleteOne({ _id: tweetId });
     }
 
+
     for (const commentId of tweetsComments) {
         const commentTweet = await TweetModel.findOne({ _id: commentId });
-        if (commentTweet) {
-            await deleteTweet(commentTweet._id, commentTweet.user_id);
-        }
+        if (!commentTweet)
+            throw new Error()
+        await deleteTweet(commentTweet._id, commentTweet.user_id);
     }
     return await TweetModel.deleteOne({ _id: tweetId });
-};
+}
 
+
+//65b6514fc94ab32f11cca63e
 
 
 
