@@ -7,7 +7,7 @@ export const authUser = (req:typeof authRequest,res: typeof authResponse,next:ty
   const authHeader = req.headers['authorization'];
   const token = authHeader
   if(!token){
-    return res.status(401).json({data:"You need to send token to this endpoint url"})
+    return res.status(401).json("You need to send token to this endpoint url")
   }
   try{
     
@@ -16,6 +16,6 @@ export const authUser = (req:typeof authRequest,res: typeof authResponse,next:ty
     next();
   }
   catch(err){
-    return res.status(401).json({data:"Token invalid or expired, log in again"})
+    return res.status(401).json("Token invalid or expired, log in again")
   }
 }
