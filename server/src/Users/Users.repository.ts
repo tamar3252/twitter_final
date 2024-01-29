@@ -1,5 +1,4 @@
 const { UserModel } = require("../Models/UserModel");
-const { Request: ExpressRequest } = require("express");
 const bcrypt = require("bcrypt");
 
 export const findUserByEmail = async (email: String) => {

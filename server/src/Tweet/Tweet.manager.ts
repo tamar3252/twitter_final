@@ -67,8 +67,6 @@ export const addCommentFunc = async (req: typeof ExpressRequest) => {
 }
 export const deleteTweetFunc = async (req: typeof ExpressRequest) => {
     const userId = req.tokenData.user_id;
-    console.log('kkkkk',userId);
-    
     const tweetId = req.params.tweet_id;
 
     try {
