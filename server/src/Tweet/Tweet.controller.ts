@@ -1,5 +1,5 @@
 const { Request: ExpressRequest,respose:ExpressResponse } = require("express") ;
-const {getAllTweetsFunc,getTweetsWithFollowerFunc,getTweetFunc,addTweetFunc,deleteTweetFunc} =require('./Tweet.manager')
+const {getAllTweetsFunc,getTweetsWithFollowerFunc,getTweetFunc,addTweetFunc,addCommentFunc,deleteTweetFunc} =require('./Tweet.manager')
 
 
 export const TweetCtrl ={
@@ -12,11 +12,15 @@ export const TweetCtrl ={
         res.status(respose.status).json(respose.value)
     },
     getTweet:async (req:typeof ExpressRequest,res:typeof ExpressResponse) => {
-        const respose =await getTweetFunc();
+        const respose =await getTweetFunc(req);
         res.status(respose.status).json(respose.value)
     },
     addTweet:async (req:typeof ExpressRequest,res:typeof ExpressResponse) => {
         const respose =await addTweetFunc(req);
+        res.status(respose.status).json(respose.value)
+    },
+    addComment:async (req:typeof ExpressRequest,res:typeof ExpressResponse) => {
+        const respose =await addCommentFunc(req);
         res.status(respose.status).json(respose.value)
     },
     deleteTweet:async (req:typeof ExpressRequest,res:typeof ExpressResponse) => {
