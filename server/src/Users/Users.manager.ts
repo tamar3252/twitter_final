@@ -1,3 +1,5 @@
+const mongoose =require("mongoose")
+
 const { loginValidation, userValidation } = require("./Users.validator");
 const { checkPassword, createToken } = require('../Funcs')
 const { userRepository } = require('./Users.repository')
@@ -67,14 +69,14 @@ export const userManager = {
         const userId = req.tokenData.user_id;
         const userToFollowId = req.params.follow_id;
 
-        if (userToFollowId == undefined) {
-            return { status: 400, value: "ERROR: invalid comment details ,send follow id" }
+        if (!mongoose.Types.ObjectId.isValid(userToFollowId)) {
+            return { status: 400, value: "ERROR: invalid details ,send follow id" }
         }
 
         try {
             const response = await userRepository.addFollower(userId, userToFollowId)
-            if (response.matchedCount == 0)
-                return { status: 400, value: 'user id not found' }
+            if (!response||response.matchedCount == 0)
+                return { status: 400, value: 'user not found' }
             if (response.modifiedCount == 0)
                 return { status: 400, value: 'you already follow this user' }
             return { status: 200, value: 'success' }
@@ -88,8 +90,8 @@ export const userManager = {
         const userId = req.tokenData.user_id;
         const userToFollowId = req.params.follow_id;
 
-        if (userToFollowId == undefined) {
-            return { status: 400, value: "ERROR: invalid comment details ,send follow id" }
+        if (!mongoose.Types.ObjectId.isValid(userToFollowId)) {
+            return { status: 400, value: "ERROR: invalid details ,send follow id" }
         }
 
         try {
