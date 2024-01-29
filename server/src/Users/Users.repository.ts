@@ -25,7 +25,7 @@ export const userRepository = {
         return await UserModel.updateOne({ _id: userId, follows: { $in: [userToFollowId] } }, { $pull: { follows: userToFollowId } })
     },
     changeToManager: async (userId: String) => {
-        return await UserModel.findOneAndUpdate({ _id: userId }, { role: "admin" }, { new: true })
+        return await UserModel.findOneAndUpdate({ _id: userId }, { role: "admin" })
     }
 
 

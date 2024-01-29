@@ -26,7 +26,6 @@ export const userManager = {
             return { status: 500, value: err.message }
         }
     },
-
     login: async (req: typeof ExpressRequest) => {
         let validBody = loginValidation(req.body);
         if (validBody.error) {
@@ -50,7 +49,6 @@ export const userManager = {
             return { status: 500, value: err.message }
         }
     },
-
     getUserDetails: async (req: typeof ExpressRequest) => {
         const userId = req.tokenData.user_id;
         try {
@@ -64,7 +62,6 @@ export const userManager = {
             return { status: 500, value: err.message }
         }
     },
-    
     addFollower: async (req: typeof ExpressRequest) => {
         const userId = req.tokenData.user_id;
         const userToFollowId = req.params.follow_id;
@@ -96,8 +93,8 @@ export const userManager = {
 
         try {
             const response = await userRepository.removeFollower(userId, userToFollowId)
-            if (response.matchedCount == 0)
-                return { status: 400, value: 'user id not found' }
+            if (!response||response.matchedCount == 0)
+                return { status: 400, value: 'user not found' }
             if (response.modifiedCount == 0)
                 return { status: 400, value: 'you dont follow this user' }
             return { status: 200, value: 'success' }
@@ -106,12 +103,12 @@ export const userManager = {
             return { status: 500, value: err.message }
         }
     },
-    changeToManager: (req: typeof ExpressRequest) => {
+    changeToManager: async(req: typeof ExpressRequest) => {
         const userId = req.tokenData.user_id;
         try {
-            const response = userRepository.changeToManager(userId)
+            const response =await userRepository.changeToManager(userId)
             if (!response) {
-                return { status: 400, value: { response } }
+                return { status: 400, value:  "ERROR: user not found"  }
             }
             return { status: 200, value: 'seccess' }
         }
