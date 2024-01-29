@@ -18,7 +18,8 @@ export const userRepository = {
     addFollower: async (userId: String, userToFollowId: String) => {
         const userToFollow = await UserModel.findOne({ _id: userToFollowId })
         if (!userToFollow)
-            return await UserModel.updateOne({ _id: userId }, { $addToSet: { follows: userToFollowId } })
+            return
+        return await UserModel.updateOne({ _id: userId }, { $addToSet: { follows: userToFollowId } })
     },
     removeFollower: async (userId: String, userToFollowId: String) => {
         return await UserModel.updateOne({ _id: userId, follows: { $in: [userToFollowId] } }, { $pull: { follows: userToFollowId } })
