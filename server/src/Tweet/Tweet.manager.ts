@@ -73,23 +73,21 @@ export const deleteTweetFunc = async (req: typeof ExpressRequest) => {
 
     const session = await mongoose.startSession();
     session.startTransaction();
-    
+
     try {
         const respose = await deleteTweet(tweetId, userId)
-        if (!respose) {
-            await session.abortTransaction();
-            session.endSession();
-            return { status: 500, value: "You dont have permission to delete this tweet" }
-        }
+        // if (!respose) {
+        //     await session.abortTransaction();
+        //     session.endSession();
+        //     return { status: 500, value: "You dont have permission to delete this tweet" }
+        // }
         await session.commitTransaction();
         session.endSession();
-
         return { status: 200, value: respose }
     }
     catch (err) {
         await session.abortTransaction();
         session.endSession();
-
         return { status: 500, value: err.message }
     }
 }
