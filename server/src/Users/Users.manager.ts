@@ -1,18 +1,13 @@
-const mongoose =require("mongoose")
-
-const { loginValidation, userValidation } = require("./Users.validator");
+const mongoose = require("mongoose")
 const { checkPassword, createToken } = require('../Funcs')
 const { userRepository } = require('./Users.repository')
 const { Request: ExpressRequest } = require("express");
 
 export const userManager = {
     signup: async (req: typeof ExpressRequest) => {
-        let validBody = userValidation(req.body);
-        if (validBody.error) {
-            return { status: 400, value: "ERROR: invalid user details " + validBody.error.details[0].message }
-        }
         try {
-            const response = await userRepository.addUser(req.body)
+            const response = userRepository.addUser(req.body)
+
             if (!response)
                 return { status: 500, value: response }
             let token = createToken(response._id, response.role);
@@ -27,10 +22,6 @@ export const userManager = {
         }
     },
     login: async (req: typeof ExpressRequest) => {
-        let validBody = loginValidation(req.body);
-        if (validBody.error) {
-            return { status: 400, value: "ERROR: invalid comment details " + validBody.error.details[0].message }
-        }
         try {
             const user = await userRepository.findUserByEmail(req.body.email)
             if (!user) {
@@ -56,7 +47,7 @@ export const userManager = {
             if (!user) {
                 return { status: 400, value: "ERROR: user not found" }
             }
-            return { status: 200, value: { user } }
+            return { status: 200, value:  user  }
         }
         catch (err) {
             return { status: 500, value: err.message }
@@ -66,13 +57,13 @@ export const userManager = {
         const userId = req.tokenData.user_id;
         const userToFollowId = req.params.follow_id;
 
-        if (!mongoose.Types.ObjectId.isValid(userToFollowId)) {
-            return { status: 400, value: "ERROR: invalid details ,send follow id" }
-        }
-
         try {
+            const userToFollow = await userRepository.findUserById(userToFollowId)
+            if (!userToFollow)
+                return { status: 400, value: 'user to follow not found' }
+
             const response = await userRepository.addFollower(userId, userToFollowId)
-            if (!response||response.matchedCount == 0)
+            if (!response || response.matchedCount == 0)
                 return { status: 400, value: 'user not found' }
             if (response.modifiedCount == 0)
                 return { status: 400, value: 'you already follow this user' }
@@ -87,13 +78,9 @@ export const userManager = {
         const userId = req.tokenData.user_id;
         const userToFollowId = req.params.follow_id;
 
-        if (!mongoose.Types.ObjectId.isValid(userToFollowId)) {
-            return { status: 400, value: "ERROR: invalid details ,send follow id" }
-        }
-
         try {
             const response = await userRepository.removeFollower(userId, userToFollowId)
-            if (!response||response.matchedCount == 0)
+            if (!response || response.matchedCount == 0)
                 return { status: 400, value: 'user not found' }
             if (response.modifiedCount == 0)
                 return { status: 400, value: 'you dont follow this user' }
@@ -103,12 +90,12 @@ export const userManager = {
             return { status: 500, value: err.message }
         }
     },
-    changeToManager: async(req: typeof ExpressRequest) => {
+    changeToManager: async (req: typeof ExpressRequest) => {
         const userId = req.tokenData.user_id;
         try {
-            const response =await userRepository.changeToManager(userId)
+            const response = await userRepository.changeToManager(userId)
             if (!response) {
-                return { status: 400, value:  "ERROR: user not found"  }
+                return { status: 400, value: "ERROR: user not found" }
             }
             return { status: 200, value: 'seccess' }
         }

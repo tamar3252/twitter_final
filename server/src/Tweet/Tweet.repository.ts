@@ -5,13 +5,8 @@ export const TweetRepository ={
     getAllTweets : async () => {
         return await TweetModel.find()
     },
-    getTweetsWithFollower : async (userId: String) => {
-        const tweetsWithFollower = []
-        const followers = (await UserModel.findOne({ _id: userId })).follows
-        for (const id of followers) {
-            tweetsWithFollower.push(await TweetModel.find({ user_id: id }))
-        }
-        return tweetsWithFollower
+    getTweetsWithFollower : async (follows: [String]) => {
+        return await TweetModel.find({ user_id: { $in: follows } })
     },
     getTweet :async (tweetId: String) => {
         return await TweetModel.findOne({ _id: tweetId })
@@ -21,81 +16,48 @@ export const TweetRepository ={
         await tweet.save();
         return tweet
     },
-    addComment : async (commentObj: Object, tweetId: String) => {
-        const tweet = await TweetRepository.addTweet(commentObj)
-        await tweet.save();
-        await TweetModel.updateOne({ _id: tweetId }, { $addToSet: { comments: tweet._id } })
+    addCommentIdToTweet : async ( tweetId: String,commentId:String) => {
+        await TweetModel.updateOne({ _id: tweetId }, { $addToSet: { comments: commentId } })
     },
     deleteTweet : async (tweetId: String, userId: String) => {
-        let tweetsComments;
-    
-        const user = await UserModel.findOne({ _id: userId });
-        if (!user) {
-            throw new Error("You dont have permission to delete this tweet")
-        }
-    
-        const userRole = user.role;
-        if (userRole === "admin") {
-            const tweet = await TweetModel.findOne({ _id: tweetId }).populate('user_id');
-            if (!tweet || tweet.user_id.role === "admin") {
-                throw new Error("You dont have permission to delete this tweet")
-            }
-            tweetsComments = tweet.comments;
-        }
-        else {
-            const userTweet = await TweetModel.findOne({ user_id: userId, _id: tweetId });
-            if (!userTweet) {
-                throw new Error("tweet not exist")
-            }
-            tweetsComments = userTweet.comments;
-        }
-    
-        if (!tweetsComments || tweetsComments.length === 0) {
-            return await TweetModel.deleteOne({ _id: tweetId });
-        }
-    
-    
-        for (const commentId of tweetsComments) {
-            const commentTweet = await TweetModel.findOne({ _id: commentId });
-            if (!commentTweet)
-                throw new Error("comment not exist")
-            await TweetRepository.deleteTweet(commentTweet._id, commentTweet.user_id);
-        }
         return await TweetModel.deleteOne({ _id: tweetId });
-    }
 
-
-
+    //     let tweetsComments;
+    
+    //     const user = await UserModel.findOne({ _id: userId });
+    //     if (!user) {
+    //         throw new Error("You dont have permission to delete this tweet")
+    //     }
+    
+    //     const userRole = user.role;
+    //     if (userRole === "admin") {
+    //         const tweet = await TweetModel.findOne({ _id: tweetId }).populate('user_id');
+    //         if (!tweet || tweet.user_id.role === "admin") {
+    //             throw new Error("You dont have permission to delete this tweet")
+    //         }
+    //         tweetsComments = tweet.comments;
+    //     }
+    //     else {
+    //         const userTweet = await TweetModel.findOne({ user_id: userId, _id: tweetId });
+    //         if (!userTweet) {
+    //             throw new Error("tweet not exist")
+    //         }
+    //         tweetsComments = userTweet.comments;
+    //     }
+    
+    //     if (!tweetsComments || tweetsComments.length === 0) {
+    //         return await TweetModel.deleteOne({ _id: tweetId });
+    //     }
+    
+    
+    //     for (const commentId of tweetsComments) {
+    //         const commentTweet = await TweetModel.findOne({ _id: commentId });
+    //         if (!commentTweet)
+    //             throw new Error("comment not exist")
+    //         await TweetRepository.deleteTweet(commentTweet._id, commentTweet.user_id);
+    //     }
+    //     return await TweetModel.deleteOne({ _id: tweetId });
+    // }
 }
 
-// export const deleteTweet = async (tweetId: String, userId: String) => {
-
-//     let tweetsComments;
-//     const userRole = (await UserModel.findOne({ _id: userId })).role
-//     if (userRole == "admin") {
-//         tweetsComments = await TweetModel.findOne({ _id: tweetId })
-//         if ((await tweetsComments.populate('user_id')).user_id.role == "admin")
-//             return
-
-//         tweetsComments = tweetsComments.comments
-
-//     }
-//     else {
-//         tweetsComments = await TweetModel.findOne({ user_id: userId, tweet_id: tweetId }).comments
-//     }
-
-//     if (tweetsComments.length > 0)
-//     {
-//         console.log(tweetsComments);
-//         for (const tweetId of tweetsComments) {
-//             const tweet = await TweetModel.findOne({ _id: tweetId })
-//             deleteTweet(tweet._id, tweet.user_id)
-//         };
-
-//     }
-//     return await TweetModel.deleteOne({ _id: tweetId })
-// }
-
-
-
-
+}

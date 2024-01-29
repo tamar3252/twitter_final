@@ -1,7 +1,5 @@
 const { Request: ExpressRequest,respose:ExpressResponse } = require("express") ;
-// const {getAllTweetsFunc,getTweetsWithFollowerFunc,getTweetFunc,addTweetFunc,addCommentFunc,deleteTweetFunc} =require('./Tweet.manager')
 const {TweetManager}=require('./Tweet.manager')
-
 
 export const TweetController ={
     getAllTweets:async (req:typeof ExpressRequest, res:typeof ExpressResponse) => {

@@ -7,7 +7,7 @@ export const checkPassword=async(reqPassword:String,userPassword:String)=>{
 }
 
 export const createToken = (user_id:Number, role:String) => { 
-    let token = jwt.sign({ user_id, role }, config.tokenSecret, { expiresIn: "60mins" });
+    const token = jwt.sign({ user_id, role }, config.tokenSecret, { expiresIn: "60mins" });
     return token;
   }
   

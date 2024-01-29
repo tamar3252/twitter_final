@@ -10,8 +10,7 @@ export const authUser = (req:typeof authRequest,res: typeof authResponse,next:ty
     return res.status(401).json("You need to send token to this endpoint url")
   }
   try{
-    
-    let decodeToken = jwt.verify(token, config.tokenSecret);    
+    const decodeToken = jwt.verify(token, config.tokenSecret);    
     req.tokenData = decodeToken;
     next();
   }
