@@ -1,4 +1,5 @@
-const { TweetModel, UesrModel } = require("../Models/TweetModel")
+const { TweetModel } = require("../Models/TweetModel")
+const { UserModel } = require("../Models/UserModel")
 
 
 export const getAllTweets = async () => {
@@ -6,11 +7,11 @@ export const getAllTweets = async () => {
 }
 export const getTweetsWithFollower = async (userId: String) => {
     const tweetsWithFollower = []
-    const followers = await UesrModel.findOne({ _id: userId }).follows
+    const followers =( await UserModel.findOne({ _id: userId })).follows
     for (const id of followers) {
         tweetsWithFollower.push(await TweetModel.find({ user_id: id }))
     }
-    return
+    return tweetsWithFollower
 }
 
 export const getTweet = async (tweetId: String) => {
@@ -18,22 +19,96 @@ export const getTweet = async (tweetId: String) => {
 }
 
 export const addTweet = async (tweetObj: Object) => {
-    return await new TweetModel(tweetObj)
+    let tweet = await new TweetModel(tweetObj);
+    await tweet.save();
+    return tweet
+}
+export const addComment = async (commentObj: Object, tweetId: String) => {
+    const tweet = await addTweet(commentObj)
+    await tweet.save();
+    await TweetModel.updateOne({ _id: tweetId }, { $addToSet: { comments: tweet._id } })
 }
 
+// export const deleteTweet = async (tweetId: String, userId: String) => {
+
+//     let tweetsComments;
+//     const userRole = (await UserModel.findOne({ _id: userId })).role
+//     if (userRole == "admin") {
+//         tweetsComments = await TweetModel.findOne({ _id: tweetId })
+//         if ((await tweetsComments.populate('user_id')).user_id.role == "admin")
+//             return
+
+//         tweetsComments = tweetsComments.comments
+
+//     }
+//     else {
+//         tweetsComments = await TweetModel.findOne({ user_id: userId, tweet_id: tweetId }).comments
+//     }
+
+//     if (tweetsComments.length > 0)
+//     {
+//         console.log(tweetsComments);
+//         for (const tweetId of tweetsComments) {
+//             const tweet = await TweetModel.findOne({ _id: tweetId })
+//             deleteTweet(tweet._id, tweet.user_id)
+//         };
+
+//     }
+//     return await TweetModel.deleteOne({ _id: tweetId })
+// }
+
 export const deleteTweet = async (tweetId: String, userId: String) => {
+
+//     const session = await mongoose.startSession();
+// session.startTransaction();
+
+// try {
+//   await deleteTweet(tweetId, userId, session);
+//   await session.commitTransaction();
+//   session.endSession();
+// } catch (error) {
+//   await session.abortTransaction();
+//   session.endSession();
+//   console.error('Error during transaction:', error.message);
+// }
+
+
+
     let tweetsComments;
-    const userRole = await UesrModel.findOne({ _id: userId }).role
-    if (userRole == "admin")
-        tweetsComments = await TweetModel.findOne({ user_id: !"admin", tweet_id: tweetId }).comments
-    else
-        tweetsComments = await TweetModel.findOne({ user_id: userId, tweet_id: tweetId }).comments
-    for (const tweet of tweetsComments) {
-        // await TweetModel.deleteOne({ _id: tweet })
-        deleteTweet(tweet, tweet.user_id)
-    };
-    return await TweetModel.deleteOne(tweetId)
-}
+
+    const user = await UserModel.findOne({ _id: userId });
+    if (!user) {
+        return;
+    }
+
+    const userRole = user.role;
+    if (userRole === "admin") {
+        const tweet = await TweetModel.findOne({ _id: tweetId }).populate('user_id');
+        if (!tweet || tweet.user_id.role === "admin") {
+            return;
+        }
+        tweetsComments = tweet.comments;
+    }
+    else {
+        const userTweet = await TweetModel.findOne({ user_id: userId, _id: tweetId });
+        if (!userTweet) {
+            return;
+        }
+        tweetsComments = userTweet.comments;
+    }
+
+    if (!tweetsComments || tweetsComments.length === 0) {
+        return await TweetModel.deleteOne({ _id: tweetId });
+    }
+
+    for (const commentId of tweetsComments) {
+        const commentTweet = await TweetModel.findOne({ _id: commentId });
+        if (commentTweet) {
+            await deleteTweet(commentTweet._id, commentTweet.user_id);
+        }
+    }
+    return await TweetModel.deleteOne({ _id: tweetId });
+};
 
 
 
