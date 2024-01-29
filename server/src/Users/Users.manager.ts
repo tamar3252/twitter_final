@@ -7,10 +7,12 @@ export const userManager={
     signup : async (req: typeof ExpressRequest) => {
         let validBody = userValidation(req.body);
         if (validBody.error) {
-            return { status: 400, value:   "ERROR: invalid comment details " + validBody.error.details[0].message  }
+            return { status: 400, value: "ERROR: invalid comment details " + validBody.error.details[0].message  }
         }
         try {
             const user = await userRepository.addUser(req.body)
+            if(!user)
+            return { status: 500, value:  user   }
             let token = createToken(user._id, user.role);
             return { status: 200, value: {  token: `${token}`, user  } }
             // res.header('Authorization', `${token}`).json({{ token: `Bearer ${token}`, user },code:111});
@@ -40,7 +42,7 @@ export const userManager={
                 return { status: 401, value:  "ERROR: wrong user name or password"  }
             }
             let token = createToken(user._id, user.role)
-            return { status: 200, value: {  token: `Bearer ${token}`, user  } }
+            return { status: 200, value: {  token: `${token}`, user  } }
             //   res.header('Authorization', `Bearer ${token}`).json({{ token: `Bearer ${token}`, user }});    
         }
         catch (err) {

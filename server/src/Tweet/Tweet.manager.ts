@@ -6,7 +6,6 @@ export const TweetManager ={
     getAllTweets : async () => {
         try {
             const allTweets = await TweetRepository.getAllTweets()
-            console.log('allTweets', allTweets);
             return { status: 200, value: allTweets }
         }
         catch (err) {
@@ -35,9 +34,6 @@ export const TweetManager ={
     },
     addTweet: async (req: typeof ExpressRequest) => {
         const userId = req.tokenData.user_id;
-    
-        // let tweet = req.body.tweet
-        // tweet.user_id = userId
         const tweet = {
             text: req.body.text,
             user_id: userId
