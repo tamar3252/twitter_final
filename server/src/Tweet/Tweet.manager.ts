@@ -1,83 +1,71 @@
-import { Types } from "mongoose";
-import { TweetController } from "./Tweet.controller";
-
-const { mongoose } = require("mongoose")
+import { ObjectId, Types } from "mongoose";
+import { Tweet } from "../../Types/Tweet";
 const { TweetRepository } = require('./Tweet.repository')
 const { Request: ExpressRequest } = require("express");
 const { userManager } = require("../Users/Users.manager")
-const { Tweet } = require("../../Types/Tweet")
 
 export const TweetManager = {
-    getAllTweets: async () => {
-        try {
-            const allTweets = await TweetRepository.getAllTweets()
-            return { status: 200, value: allTweets }
-        }
-        catch (err) {
-            return { status: 500, value: err.message }
-        }
+    getAllTweets: async (): Promise<Object> => {
+        const allTweets = await TweetRepository.getAllTweets()
+        return { status: 200, value: allTweets }
+        // const allTweets: [Tweet[]] = await TweetRepository.getAllTweets().catch((err: Error) => {            
+        //     return { status: 500, value: err.message }
+        // })
+        // return { status: 204, value: allTweets }
     },
-    getTweetsWithFollower: async (req: typeof ExpressRequest) => {
-        try {
-            const followsId = (await userManager.getUserDetails(req)).value.follows
+    getTweetsWithFollower: async (req: typeof ExpressRequest): Promise<Object> => {
+        const followsId: ObjectId[] = (await userManager.getUserDetails(req)).value.follows
+        const allTweetswithFollower: [Tweet[]] = await TweetRepository.getTweetsWithFollower(followsId)
+        return { status: 200, value: allTweetswithFollower }
+    },
 
-            const allTweetswithFollower = await TweetRepository.getTweetsWithFollower(followsId)
-            return { status: 200, value: allTweetswithFollower }
-        }
-        catch (err) {
-            return { status: 500, value: err.message }
-        }
-    },
-    getTweet: async (req: typeof ExpressRequest) => {
-        const tweetId = req.body.tweet_id
-        try {
-            const tweet = await TweetRepository.getTweet(tweetId).populate('user_id')
+    getTweet: async (req: typeof ExpressRequest): Promise<Object> => {
+        const tweetId: ObjectId = req.body.tweet_id
+        const userId: ObjectId = req.tokenData.user_id
+        if (userId) {
+            const tweet: Tweet = await TweetRepository.getTweet(tweetId, userId).populate('user_id')
             return { status: 200, value: tweet }
         }
-        catch (err) {
-            return { status: 500, value: err.message }
-        }
+        const tweet: Tweet = await TweetRepository.getTweet(tweetId).populate('user_id')
+        return { status: 200, value: tweet }
     },
-    addTweet: async (req: typeof ExpressRequest) => {
-        const userId = req.tokenData.user_id;
-        const tweet = {
-            text: req.body.text,
-            user_id: userId
+    addTweet: async (req: typeof ExpressRequest): Promise<Object> => {
+        const userId: ObjectId = req.tokenData.user_id;
+        const text: String = req.body.text
+
+        const tweet: Tweet = {
+            text: text,
+            user_id: userId,
+            comments: null,
+            likes: null
         }
-        try {
-            await TweetRepository.addTweet(tweet)
-            return { status: 200, value: tweet }
-        }
-        catch (err) {
-            return { status: 500, value: err.message }
-        }
+        await TweetRepository.addTweet(tweet)
+        return { status: 200, value: tweet }
     },
-    addComment: async (req: typeof ExpressRequest) => {
-        const userId = req.tokenData.user_id;
-        const tweetId = req.body.tweetId
-        const tweet = {
+    addComment: async (req: typeof ExpressRequest): Promise<Object> => {
+        const userId: ObjectId = req.tokenData.user_id;
+        const tweetId: ObjectId = req.body.tweetId
+        const tweet: Tweet = {
             text: req.body.text,
-            user_id: userId
+            user_id: userId,
+            comments: null,
+            likes: null
         }
-        try {
-            const commentId = (await TweetRepository.addTweet(tweet))._id
-            await TweetRepository.addCommentIdToTweet(tweetId, commentId)
-            return { status: 200, value: 'success' }
-        }
-        catch (err) {
-            return { status: 500, value: err.message }
-        }
+        const commentId: ObjectId = (await TweetRepository.addTweet(tweet))._id
+        await TweetRepository.addCommentIdToTweet(tweetId, commentId)
+        return { status: 200, value: 'success' }
     },
     // deleteTweet: async (req: typeof ExpressRequest) => {
     //     const userId = req.tokenData.user_id;
-    //     const tweetId = req.params.tweet_id;
-        
+    //     const tweetId:ObjectId= req.params.tweet_id;
+
 
     //     const session = await mongoose.startSession();
     //     session.startTransaction();
 
     //     let tweetsComments
     //     try {
+
     //         const user = (await userManager.getUserDetails(req))
     //         if (!user) {
     //             return { status: 500, value: "You dont have permission to delete this tweet" }
@@ -102,7 +90,7 @@ export const TweetManager = {
 
 
     //         if (!tweetsComments || tweetsComments.length === 0) {
-    //             const response=await TweetRepository.deleteTweet({ _id: tweetId });
+    //             const response = await TweetRepository.deleteTweet({ _id: tweetId });
     //             return { status: 200, value: response }
     //         }
 
@@ -111,7 +99,7 @@ export const TweetManager = {
     //             const commentTweet: typeof Tweet = await TweetManager.getTweet(commentId)
     //             if (!commentTweet)
     //                 // throw new Error("comment not exist")
-    //                 return { status: 500, value:"comment not exist"}
+    //                 return { status: 500, value: "comment not exist" }
     //             await TweetRepository.deleteTweet(commentTweet._id, commentTweet.user_id);
     //         }
     //         const response = await TweetRepository.deleteTweet(tweetId)

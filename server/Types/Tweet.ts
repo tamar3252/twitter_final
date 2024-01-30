@@ -1,9 +1,9 @@
-import { Types } from "mongoose";
+import {ObjectId, Types } from "mongoose";
 
 
 export type Tweet = {
     text:String,
-    user_id: Types.ObjectId,
-    comments: Types.ObjectId[];
-    likes: Types.ObjectId[]
+    user_id: ObjectId,
+    comments: ObjectId[]|null;
+    likes: ObjectId[]|null
   };

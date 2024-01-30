@@ -1,9 +1,10 @@
 import mongoose, { Document, Schema, Types } from "mongoose";
+import {Like} from '../../Types/Like'
 
-type Like = {
-  user_id: Types.ObjectId,
-  tweet_id: Types.ObjectId,
-}
+// type Like = {
+//   user_id: Types.ObjectId,
+//   tweet_id: Types.ObjectId,
+// }
 
 type LikeDocument = Like & Document
 

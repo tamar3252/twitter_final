@@ -1,11 +1,12 @@
 import mongoose, { Document, Schema, Types } from "mongoose";
+import {Tweet} from '../../Types/Tweet'
 
-type Tweet = {
-  text:String,
-  user_id: Types.ObjectId,
-  comments: Types.ObjectId[];
-  likes: Types.ObjectId[]
-};
+// type Tweet = {
+//   text:String,
+//   user_id: Types.ObjectId,
+//   comments: Types.ObjectId[];
+//   likes: Types.ObjectId[]
+// };
 
 type TweetDocument = Tweet & Document;
 
