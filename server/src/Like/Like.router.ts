@@ -1,5 +1,5 @@
 const express = require("express")
-const {LikeController}=require('./Like.controller')
+const LikeController=require('./Like.controller')
 const {authUser} =require('../Auth')
 
 const router = express.Router();

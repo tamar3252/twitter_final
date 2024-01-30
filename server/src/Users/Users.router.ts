@@ -1,7 +1,7 @@
 const expressUser = require("express");
-const { userController } = require("./Users.controller");
+const  userController  = require("./Users.controller");
 const {authUser} =require('../Auth')
-const {userValidation} =require('./Users.validator')
+const userValidation =require('./Users.validator')
 
 const routerUser = expressUser.Router();
 

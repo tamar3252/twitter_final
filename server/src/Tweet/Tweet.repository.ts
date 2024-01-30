@@ -3,27 +3,27 @@ const { TweetModel } = require("../Models/TweetModel")
 const { Tweet } = require("../../Types/Tweet")
 
 
-export const TweetRepository = {
-    getAllTweets: async ():Promise<typeof Tweet[]> => {
+
+    export const getAllTweets= async ():Promise<typeof Tweet[]> => {
         return await TweetModel.find()
-    },
-    getTweetsWithFollower: async (follows: [String]):Promise<typeof Tweet[]> => {
+    }
+    export const getTweetsWithFollower= async (follows: [String]):Promise<typeof Tweet[]> => {
         return await TweetModel.find({ user_id: { $in: follows } })
-    },
-    getTweet: async (tweetId: String, userId: String):Promise<typeof Tweet> => {
+    }
+    export const getTweet= async (tweetId: String, userId: String):Promise<typeof Tweet> => {
         if (userId)///
             return await TweetModel.findOne({ user_id: userId, _id: tweetId });
         return await TweetModel.findOne({ _id: tweetId })
-    },
-    addTweet: async (tweetObj: Object):Promise<typeof Tweet> => {
+    }
+    export const addTweet= async (tweetObj: Object):Promise<typeof Tweet> => {
         const tweet:Document= await new TweetModel(tweetObj);
         await tweet.save();
         return tweet
-    },
-    addCommentIdToTweet: async (tweetId: String, commentId: String):Promise<void>=> {
+    }
+    export const addCommentIdToTweet= async (tweetId: String, commentId: String):Promise<void>=> {
         await TweetModel.updateOne({ _id: tweetId }, { $addToSet: { comments: commentId } })
-    },
-    deleteTweet: async (tweetId: String, userId: String) => {
+    }
+    export const deleteTweet= async (tweetId: String, userId: String) => {
         return await TweetModel.deleteOne({ _id: tweetId });
 
         //     let tweetsComments;
@@ -64,4 +64,3 @@ export const TweetRepository = {
         // }
     }
 
-}

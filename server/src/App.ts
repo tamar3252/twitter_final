@@ -7,8 +7,6 @@ const cookieParser = require('cookie-parser')
 require("./db/ConnectDB");
 const {config} = require("./Config")
 
-
-
 const { routesInit } = require('./Router')
 
 const app = express();
