@@ -9,7 +9,6 @@ export const userManager = {
         if (!response)
             return { status: 500, value: response }
         let token = createToken(response._id, response.role);
-        
         return { status: 200, value: { token: `${token}`, response } }
         // res.header('Authorization', `${token}`).json({{ token: `Bearer ${token}`, user },code:111});
 
@@ -31,7 +30,7 @@ export const userManager = {
         const userId = req.tokenData.user_id;
             const user = await userRepository.findUserById(userId)
             if (!user) {
-                return { status: 500, value: "ERROR: user not found" }
+                return { status: 401, value: "ERROR: user not found" }
             }
             return { status: 200, value: user }
     },
@@ -41,13 +40,13 @@ export const userManager = {
 
             const userToFollow = await userRepository.findUserById(userToFollowId)
             if (!userToFollow)
-                return { status: 500, value: 'user to follow not found' }
+                return { status: 401, value: 'user to follow not found' }
 
             const response = await userRepository.addFollower(userId, userToFollowId)
             if (!response || response.matchedCount == 0)
-                return { status: 500, value: 'user not found' }
+                return { status: 401, value: 'user not found' }
             if (response.modifiedCount == 0)
-                return { status: 500, value: 'you already follow this user' }
+                return { status: 401, value: 'you already follow this user' }
             return { status: 200, value: 'success' }
     },
     removeFollower: async (req: typeof ExpressRequest) => {
@@ -56,16 +55,16 @@ export const userManager = {
 
             const response = await userRepository.removeFollower(userId, userToFollowId)
             if (!response || response.matchedCount == 0)
-                return { status: 500, value: 'user not found' }
+                return { status: 401, value: 'user not found' }
             if (response.modifiedCount == 0)
-                return { status: 500, value: 'you dont follow this user' }
+                return { status: 401, value: 'you dont follow this user' }
             return { status: 200, value: 'success' }
     },
     changeToManager: async (req: typeof ExpressRequest) => {
         const userId = req.tokenData.user_id;
             const response = await userRepository.changeToManager(userId)
             if (!response) {
-                return { status: 500, value: "ERROR: user not found" }
+                return { status: 401, value: "ERROR: user not found" }
             }
             return { status: 200, value: 'seccess' }
     }
