@@ -1,13 +1,12 @@
-const express = require("express")
-const path=require('path')
-const cors = require("cors");
-const http = require('http')
-const cookieParser = require('cookie-parser')
+import express from "express";
+import path from 'path';
+import cors from "cors";
+import http from 'http';
+import cookieParser from 'cookie-parser';
 
-require("./db/ConnectDB");
-const {config} = require("./Config")
-
-const { routesInit } = require('./Router')
+import "./db/ConnectDB";
+import { config } from "./Config";
+import { routesInit } from './Router';
 
 const app = express();
 app.use(cors({

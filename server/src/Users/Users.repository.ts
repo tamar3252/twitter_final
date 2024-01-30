@@ -1,6 +1,5 @@
-const { UserModel } = require("../Models/UserModel");
-const bcrypt = require("bcrypt");
-
+import bcrypt from "bcrypt";
+import { UserModel } from "../Models/UserModel";
 
 export const findUserByEmail = async (email: String) => {
     return await UserModel.findOne({ email })

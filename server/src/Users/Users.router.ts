@@ -1,7 +1,7 @@
-const expressUser = require("express");
-const  userController  = require("./Users.controller");
-const {authUser} =require('../Auth')
-const userValidation =require('./Users.validator')
+import expressUser from "express";
+import * as userController from "./Users.controller";
+import { authUser } from "../Auth";
+import * as userValidation from "./Users.validator";
 
 const routerUser = expressUser.Router();
 

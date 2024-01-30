@@ -1,7 +1,6 @@
 import { Document } from 'mongoose';
 const { LikeModel } = require('../Models/LikeModel')
 
-
 export const addLike = async (likeObj: Object) => {
     const like: Document = await new LikeModel(likeObj);
     await like.save();

@@ -1,7 +1,6 @@
 const { Request: ExpressRequest } = require("express");
 const likeRepository = require("./Like.repository")
 
-
 export const addLike = async (req: typeof ExpressRequest) => {
     const userId = req.tokenData.user_id;
     const tweetId = req.body.tweet_id

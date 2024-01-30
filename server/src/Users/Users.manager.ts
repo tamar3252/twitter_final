@@ -1,9 +1,12 @@
-const { checkPassword, createToken } = require('../Funcs')
-const  userRepository  = require('./Users.repository')
-const { Request: ExpressRequest } = require("express");
+import { checkPassword, createToken } from '../Funcs';
+import * as userRepository from './Users.repository';
+import { Request } from "express";
 
+interface  AuthRequest extends Request {
+    tokenData: any 
+  }
 
-export const signup = async (req: typeof ExpressRequest) => {
+export const signup = async (req: Request) => {
     const response = await userRepository.addUser(req.body)
     if (!response)
         return { status: 500, value: response }
@@ -11,7 +14,7 @@ export const signup = async (req: typeof ExpressRequest) => {
     return { status: 200, value: { token: `${token}`, response } }
     // res.header('Authorization', `${token}`).json({{ token: `Bearer ${token}`, user },code:111});
 }
-export const login = async (req: typeof ExpressRequest) => {
+export const login = async (req: Request) => {
     const user = await userRepository.findUserByEmail(req.body.email)
     if (!user) {
         return { status: 401, value: "ERROR: wrong user name or password" }
@@ -24,7 +27,7 @@ export const login = async (req: typeof ExpressRequest) => {
     return { status: 200, value: { token: `${token}`, user } }
     //   res.header('Authorization', `Bearer ${token}`).json({{ token: `Bearer ${token}`, user }});    
 }
-export const getUserDetails = async (req: typeof ExpressRequest) => {
+export const getUserDetails = async (req: AuthRequest) => {
     const userId = req.tokenData.user_id;
     const user = await userRepository.findUserById(userId)
     if (!user) {
@@ -32,7 +35,7 @@ export const getUserDetails = async (req: typeof ExpressRequest) => {
     }
     return { status: 200, value: user }
 }
-export const addFollower = async (req: typeof ExpressRequest) => {
+export const addFollower = async (req: AuthRequest) => {
     const userId = req.tokenData.user_id;
     const userToFollowId = req.params.follow_id;
 
@@ -47,7 +50,7 @@ export const addFollower = async (req: typeof ExpressRequest) => {
         return { status: 401, value: 'you already follow this user' }
     return { status: 200, value: 'success' }
 }
-export const removeFollower = async (req: typeof ExpressRequest) => {
+export const removeFollower = async (req: AuthRequest) => {
     const userId = req.tokenData.user_id;
     const userToFollowId = req.params.follow_id;
 
@@ -58,7 +61,7 @@ export const removeFollower = async (req: typeof ExpressRequest) => {
         return { status: 401, value: 'you dont follow this user' }
     return { status: 200, value: 'success' }
 }
-export const changeToManager = async (req: typeof ExpressRequest) => {
+export const changeToManager = async (req: AuthRequest) => {
     const userId = req.tokenData.user_id;
     const response = await userRepository.changeToManager(userId)
     if (!response) {

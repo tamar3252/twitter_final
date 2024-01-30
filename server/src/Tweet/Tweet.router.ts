@@ -1,10 +1,9 @@
-const expressTweet = require("express")
-const TweetController=require('./Tweet.controller')
-const {authUser} =require('../Auth')
-const tweetValidation=require('./Tweet.validator')
+import express from "express";
+import * as TweetController from "./Tweet.controller";
+import { authUser } from "../Auth";
+import * as tweetValidation from "./Tweet.validator";
 
-
-const routerTweet = expressTweet.Router();
+const routerTweet = express.Router();
 
 routerTweet.get("/all_tweets",TweetController.getAllTweets)
 routerTweet.get("/tweet",TweetController.getTweet)

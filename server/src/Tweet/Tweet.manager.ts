@@ -1,5 +1,5 @@
 import { ObjectId, Types } from "mongoose";
-import { Tweet } from "../../Types/Tweet";
+import { Tweet } from "../../../Types/Tweet";
 const  TweetRepository  = require('./Tweet.repository')
 const { Request: ExpressRequest } = require("express");
 const { userManager } = require("../Users/Users.manager")
@@ -8,6 +8,7 @@ export const getAllTweets = async (): Promise<Object> => {
     const allTweets = await TweetRepository.getAllTweets()
     return { status: 200, value: allTweets }
 }
+
 export const getTweetsWithFollower = async (req: typeof ExpressRequest): Promise<Object> => {
     const followsId: ObjectId[] = (await userManager.getUserDetails(req)).value.follows
     const allTweetswithFollower: [Tweet[]] = await TweetRepository.getTweetsWithFollower(followsId)

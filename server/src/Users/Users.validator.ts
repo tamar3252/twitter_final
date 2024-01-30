@@ -1,9 +1,8 @@
-const Joi = require("joi");
-const { Request: ExpressRequest, respose: ExpressResponse, next: ExpressNext } = require("express");
+import { Request , Response ,NextFunction  } from "express";
+import Joi from "joi";
 
 
-
-export const signupValidation = (req: typeof ExpressRequest, res: typeof ExpressResponse, next: typeof ExpressNext) => {
+export const signupValidation = (req: Request, res: Response, next: NextFunction) => {
   const joiSchema = Joi.object({
     full_name: {
       first_name: Joi.string().min(2).max(50).required(),
@@ -22,7 +21,7 @@ export const signupValidation = (req: typeof ExpressRequest, res: typeof Express
     next()
 
 }
-export const loginValidation = (req: typeof ExpressRequest, res: typeof ExpressResponse, next: typeof ExpressNext) => {
+export const loginValidation = (req: Request, res: Response, next: NextFunction) => {
 
   const joiSchema = Joi.object({
     email: Joi.string().email().max(99).required(),
@@ -37,7 +36,7 @@ export const loginValidation = (req: typeof ExpressRequest, res: typeof ExpressR
   else
     next()
 }
-export const followerIdValidation = (req: typeof ExpressRequest, res: typeof ExpressResponse, next: typeof ExpressNext) => {
+export const followerIdValidation = (req: Request, res: Response, next: NextFunction) => {
   const joiSchema = Joi.object({
     follow_id: Joi.string().hex().length(24)
   })

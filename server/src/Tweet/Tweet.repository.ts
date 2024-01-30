@@ -1,22 +1,20 @@
-import { Document } from 'mongoose';
-const { TweetModel } = require("../Models/TweetModel")
-const { Tweet } = require("../../Types/Tweet")
+import { TweetModel } from "../Models/TweetModel";
+import { Tweet } from "../../../Types/Tweet";
+import { ObjectId } from "mongoose";
 
-
-
-    export const getAllTweets= async ():Promise<typeof Tweet[]> => {
+    export const getAllTweets= async ():Promise<Tweet[]> => {
         return await TweetModel.find()
     }
-    export const getTweetsWithFollower= async (follows: [String]):Promise<typeof Tweet[]> => {
+    export const getTweetsWithFollower= async (follows: [String]):Promise<Tweet[]> => {
         return await TweetModel.find({ user_id: { $in: follows } })
     }
-    export const getTweet= async (tweetId: String, userId: String):Promise<typeof Tweet> => {
+    export const getTweet= async (tweetId: ObjectId, userId: ObjectId):Promise<Tweet> => {
         if (userId)///
             return await TweetModel.findOne({ user_id: userId, _id: tweetId });
         return await TweetModel.findOne({ _id: tweetId })
     }
-    export const addTweet= async (tweetObj: Object):Promise<typeof Tweet> => {
-        const tweet:Document= await new TweetModel(tweetObj);
+    export const addTweet= async (tweetObj: Object):Promise<Tweet> => {
+        const tweet= await new TweetModel(tweetObj);
         await tweet.save();
         return tweet
     }

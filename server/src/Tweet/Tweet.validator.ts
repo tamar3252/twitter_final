@@ -1,8 +1,7 @@
-const Joi = require("joi");
-const { Request: ExpressRequest, respose: ExpressResponse, next: ExpressNext } = require("express");
+import { Request , Response ,NextFunction  } from "express";
+import Joi from "joi";
 
-
-export const tweetValidation = (req: typeof ExpressRequest, res: typeof ExpressResponse, next: typeof ExpressNext) => {
+export const tweetValidation = (req: Request, res: Response, next: NextFunction) => {
     const joiSchema = Joi.object({
         text: Joi.string().required(),
     })
@@ -16,7 +15,7 @@ export const tweetValidation = (req: typeof ExpressRequest, res: typeof ExpressR
         next()
 
 }
-export const commentValidation = (req: typeof ExpressRequest, res: typeof ExpressResponse, next: typeof ExpressNext) => {
+export const commentValidation = (req: Request, res: Response, next: NextFunction) => {
     const joiSchema = Joi.object({
         text: Joi.string().required(),
         tweetId: Joi.string().hex().length(24)
@@ -31,7 +30,7 @@ export const commentValidation = (req: typeof ExpressRequest, res: typeof Expres
         next()
 
 }
-export const tweetIdValidation = (req: typeof ExpressRequest, res: typeof ExpressResponse, next: typeof ExpressNext) => {
+export const tweetIdValidation = (req: Request, res: Response, next: NextFunction) => {
     const joiSchema = Joi.object({
         tweet_id: Joi.string().hex().length(24)
     })
