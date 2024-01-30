@@ -1,18 +1,6 @@
 import mongoose, { Document, Schema, Types } from "mongoose";
 import {User} from '../../Types/User'
 
-
-// type User = {
-//     full_name: {
-//         first_name: String,
-//         last_name: String
-//     },
-//     email: string;
-//     password: string;
-//     role: "admin" | "user";
-//     follows: Types.ObjectId[];
-// }
-
 type UserDocument = User & Document;
 
 let userSchema = new Schema<UserDocument>({

@@ -8,10 +8,6 @@ export const TweetManager = {
     getAllTweets: async (): Promise<Object> => {
         const allTweets = await TweetRepository.getAllTweets()
         return { status: 200, value: allTweets }
-        // const allTweets: [Tweet[]] = await TweetRepository.getAllTweets().catch((err: Error) => {            
-        //     return { status: 500, value: err.message }
-        // })
-        // return { status: 204, value: allTweets }
     },
     getTweetsWithFollower: async (req: typeof ExpressRequest): Promise<Object> => {
         const followsId: ObjectId[] = (await userManager.getUserDetails(req)).value.follows
@@ -29,6 +25,7 @@ export const TweetManager = {
         const tweet: Tweet = await TweetRepository.getTweet(tweetId).populate('user_id')
         return { status: 200, value: tweet }
     },
+    
     addTweet: async (req: typeof ExpressRequest): Promise<Object> => {
         const userId: ObjectId = req.tokenData.user_id;
         const text: String = req.body.text
