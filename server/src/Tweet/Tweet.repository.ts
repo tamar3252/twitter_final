@@ -1,3 +1,4 @@
+import { Document } from 'mongoose';
 const { TweetModel } = require("../Models/TweetModel")
 const { Tweet } = require("../../Types/Tweet")
 
@@ -15,7 +16,7 @@ export const TweetRepository = {
         return await TweetModel.findOne({ _id: tweetId })
     },
     addTweet: async (tweetObj: Object):Promise<typeof Tweet> => {
-        let tweet = await new TweetModel(tweetObj);
+        const tweet:Document= await new TweetModel(tweetObj);
         await tweet.save();
         return tweet
     },

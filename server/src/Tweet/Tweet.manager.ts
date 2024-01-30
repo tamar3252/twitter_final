@@ -48,6 +48,7 @@ export const TweetManager = {
             comments: null,
             likes: null
         }
+        
         const commentId: ObjectId = (await TweetRepository.addTweet(tweet))._id
         await TweetRepository.addCommentIdToTweet(tweetId, commentId)
         return { status: 200, value: 'success' }
