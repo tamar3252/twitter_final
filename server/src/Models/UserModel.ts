@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema, Types } from "mongoose";
-import {User} from '../../../Types/User'
+import {Roles, User} from '../../../Types/User'
 
 type UserDocument = User & Document;
 
@@ -10,9 +10,7 @@ const userSchema = new Schema<UserDocument>({
     },
     email: String,
     password: String,
-    role: {
-        type: String, default: "user", enum: ["admin", "user"]
-    },
+    role: { type: String, enum: Object.values(Roles), default: Roles.User },
     follows: [{ type: Schema.Types.ObjectId, ref: "users" }]
 })
 

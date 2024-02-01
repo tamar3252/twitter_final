@@ -11,7 +11,6 @@ export const tweetValidation = (req: Request, res: Response, next: NextFunction)
     if (validBody.error) {
         res.status(400).json("ERROR: invalid details " + validBody.error.details[0].message)
     }
-    else
         next()
 
 }
@@ -26,7 +25,6 @@ export const commentValidation = (req: Request, res: Response, next: NextFunctio
     if (validBody.error) {
         res.status(400).json("ERROR: invalid details " + validBody.error.details[0].message)
     }
-    else
         next()
 
 }

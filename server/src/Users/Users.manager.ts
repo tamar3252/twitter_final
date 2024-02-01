@@ -3,21 +3,21 @@ import { checkPassword, createToken } from '../Funcs';
 import * as userRepository from './Users.repository';
 import { Request } from "express";
 import { Document, ObjectId, Types, UpdateWriteOpResult } from 'mongoose';
-import { User } from '../../../Types/User';
+import {  GetUserDetails, Login, Signup, Update, User } from '../../../Types/User';
 
 const ObjectId = require('mongoose').ObjectID;
 
 
 
-export const signup = async (req: Request) => {
-    const response :User= await userRepository.addUser(req.body)
-    if (!response)
-        return { status: 500, value: response }
-    let token:string = createToken(response._id, response.role);
-    return { status: 200, value: { token: `${token}`, response } }
+export const signup = async (req: Request):Promise<Signup>  => {
+    const user :User= await userRepository.addUser(req.body)
+    if (!user)
+        return { status: 500, value: user }
+    let token:string = createToken(user._id, user.role);
+    return { status: 200, value: { token: `${token}`, user } }
     // res.header('Authorization', `${token}`).json({{ token: `Bearer ${token}`, user },code:111});
 }
-export const login = async (req: Request) => {
+export const login = async (req: Request):Promise<Login> => {
     const user:User = await userRepository.findUserByEmail(req.body.email)
     if (!user) {
         return { status: 401, value: "ERROR: wrong user name or password" }
@@ -30,7 +30,7 @@ export const login = async (req: Request) => {
     return { status: 200, value: { token: `${token}`, user } }
     //   res.header('Authorization', `Bearer ${token}`).json({{ token: `Bearer ${token}`, user }});    
 }
-export const getUserDetails = async (req: AuthRequest): Promise<{ status: number; value: User | string }> => {
+export const getUserDetails = async (req: AuthRequest): Promise<GetUserDetails> => {
     const userId:ObjectId= req.tokenData.user_id;
     const user:User = await userRepository.findUserById(userId)
     if (!user) {
@@ -38,8 +38,7 @@ export const getUserDetails = async (req: AuthRequest): Promise<{ status: number
     }
     return { status: 200, value: user }
 }
-export const addFollower = async (req: AuthRequest) => {
-
+export const addFollower = async (req: AuthRequest):Promise<Update>  => {
 
     const userId :ObjectId= req.tokenData.user_id;
     const userToFollowId :ObjectId=new ObjectId(req.params.follow_id);
@@ -55,7 +54,7 @@ export const addFollower = async (req: AuthRequest) => {
         return { status: 401, value: 'you already follow this user' }
     return { status: 200, value: 'success' }
 }
-export const removeFollower = async (req: AuthRequest) => {
+export const removeFollower = async (req: AuthRequest):Promise<Update> => {
     const userId :ObjectId= req.tokenData.user_id;
     const userToFollowId:ObjectId = req.params.follow_id;
 
@@ -66,7 +65,7 @@ export const removeFollower = async (req: AuthRequest) => {
         return { status: 401, value: 'you dont follow this user' }
     return { status: 200, value: 'success' }
 }
-export const changeToManager = async (req: AuthRequest) => {
+export const changeToManager = async (req: AuthRequest) :Promise<Update>=> {
     const userId:ObjectId = req.tokenData.user_id;
     const response:User = await userRepository.changeToManager(userId)
     if (!response) {

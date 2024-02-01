@@ -1,4 +1,4 @@
-import express from "express";
+import express,{ Express } from "express";
 import path from 'path';
 import cors from "cors";
 import http from 'http';
@@ -8,10 +8,10 @@ import "./db/ConnectDB";
 import { config } from "./Config";
 import { routesInit } from './Router';
 
-const app = express();
+const app: Express = express();
 app.use(cors({
-  origin:true,
-  credentials:true
+  origin: true,
+  credentials: true
 }));
 
 app.use(express.json());
@@ -27,7 +27,7 @@ const port = config.port
 
 routesInit(app);
 
-const server = http.createServer(app);
+const server :http.Server = http.createServer(app);
 
 server.listen(port);
 

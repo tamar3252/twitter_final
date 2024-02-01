@@ -1,24 +1,28 @@
-import  jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken"
 import { config } from "./Config"
-import { Request , Response , NextFunction  } from "express";
+import { Request, Response, NextFunction } from "express";
+import { AuthRequest, TokenData } from "requestInterface";
+import { Error } from "mongoose";
 
-interface  AuthRequest extends Request {
-  tokenData: any 
-}
 
-export const authUser = (req: AuthRequest, res:  Response, next: NextFunction) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader
+export const authUser = (req: AuthRequest, res: Response, next: NextFunction): Response => {
+  const authHeader: string = req.headers['authorization'];
+  const token: string = authHeader
   if (!token) {
     return res.status(401).json("You need to send token to this endpoint url")
   }
   try {
-    const decodeToken = jwt.verify(token, config.tokenSecret);
+    const decodeToken: TokenData = (jwt.verify(token, config.tokenSecret)) as TokenData;
 
-    req.tokenData = decodeToken;
+    req.tokenData = decodeToken as TokenData
+    // req.tokenData={
+    //   user_id: (decodeToken as TokenData).user_id,
+    //   role: (decodeToken as TokenData).role,
+
+    // };
     next();
   }
-  catch (err) {
+  catch (err: unknown) {
     return res.status(401).json("Token invalid or expired, log in again")
   }
 }

@@ -17,9 +17,7 @@ export const signupValidation = (req: Request, res: Response, next: NextFunction
   if (validBody.error) {
     res.status(400).json("ERROR: invalid details " + validBody.error.details[0].message)
   }
-  else
     next()
-
 }
 export const loginValidation = (req: Request, res: Response, next: NextFunction) => {
 
@@ -33,7 +31,6 @@ export const loginValidation = (req: Request, res: Response, next: NextFunction)
   if (validBody.error) {
     res.status(400).json("ERROR: invalid details " + validBody.error.details[0].message)
   }
-  else
     next()
 }
 export const followerIdValidation = (req: Request, res: Response, next: NextFunction) => {
@@ -46,7 +43,6 @@ export const followerIdValidation = (req: Request, res: Response, next: NextFunc
   if (validBody.error) {
     res.status(400).json("ERROR: invalid details " + validBody.error.details[0].message)
   }
-  else
     next()
 }
 
