@@ -3,10 +3,10 @@ import bcrypt from "bcrypt";
 import { Document, ObjectId, UpdateWriteOpResult } from 'mongoose';
 import { User } from "../../../Types/User";
 
-export const findUserByEmail = async (email: ObjectId) => {
+export const findUserByEmail = async (email: ObjectId):Promise<User> => {
     return await UserModel.findOne({ email })
 }
-export const findUserById = async (_id: String) :Promise<User>=> {
+export const findUserById = async (_id: ObjectId) :Promise<User>=> {
     return await UserModel.findOne({ _id })
 }
 export const addUser = async (userObj: Object):Promise<User> => {
@@ -16,10 +16,10 @@ export const addUser = async (userObj: Object):Promise<User> => {
     user.password = "********";
     return user
 }
-export const addFollower = async (userId: String, userToFollowId: String):Promise<UpdateWriteOpResult> => {
+export const addFollower = async (userId: ObjectId, userToFollowId: ObjectId):Promise<UpdateWriteOpResult> => {
     return await UserModel.updateOne({ _id: userId }, { $addToSet: { follows: userToFollowId } })
 }
-export const removeFollower = async (userId: String, userToFollowId: String):Promise<UpdateWriteOpResult>  => {
+export const removeFollower = async (userId: ObjectId, userToFollowId: ObjectId):Promise<UpdateWriteOpResult>  => {
     return await UserModel.updateOne({ _id: userId, follows: { $in: [userToFollowId] } }, { $pull: { follows: userToFollowId } })
 }
 export const changeToManager = async (userId: ObjectId) => {
