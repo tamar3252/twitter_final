@@ -1,13 +1,12 @@
+import { AuthRequest } from 'requestInterface';
 import { checkPassword, createToken } from '../Funcs';
 import * as userRepository from './Users.repository';
 import { Request } from "express";
-
-interface  AuthRequest extends Request {
-    tokenData: any 
-  }
+import { Document, ObjectId } from 'mongoose';
+import { User } from '../../../Types/User';
 
 export const signup = async (req: Request) => {
-    const response = await userRepository.addUser(req.body)
+    const response :User= await userRepository.addUser(req.body)
     if (!response)
         return { status: 500, value: response }
     let token = createToken(response._id, response.role);
@@ -15,11 +14,11 @@ export const signup = async (req: Request) => {
     // res.header('Authorization', `${token}`).json({{ token: `Bearer ${token}`, user },code:111});
 }
 export const login = async (req: Request) => {
-    const user = await userRepository.findUserByEmail(req.body.email)
+    const user:User = await userRepository.findUserByEmail(req.body.email)
     if (!user) {
         return { status: 401, value: "ERROR: wrong user name or password" }
     }
-    let authPassword = await checkPassword(req.body.password, user.password);
+    let authPassword:true|false = await checkPassword(req.body.password, user.password);
     if (!authPassword) {
         return { status: 401, value: "ERROR: wrong user name or password" }
     }
@@ -27,9 +26,9 @@ export const login = async (req: Request) => {
     return { status: 200, value: { token: `${token}`, user } }
     //   res.header('Authorization', `Bearer ${token}`).json({{ token: `Bearer ${token}`, user }});    
 }
-export const getUserDetails = async (req: AuthRequest) => {
+export const getUserDetails = async (req: AuthRequest): Promise<{ status: number; value: User | string }> => {
     const userId = req.tokenData.user_id;
-    const user = await userRepository.findUserById(userId)
+    const user:User = await userRepository.findUserById(userId)
     if (!user) {
         return { status: 401, value: "ERROR: user not found" }
     }
@@ -62,7 +61,7 @@ export const removeFollower = async (req: AuthRequest) => {
     return { status: 200, value: 'success' }
 }
 export const changeToManager = async (req: AuthRequest) => {
-    const userId = req.tokenData.user_id;
+    const userId:ObjectId = req.tokenData.user_id;
     const response = await userRepository.changeToManager(userId)
     if (!response) {
         return { status: 401, value: "ERROR: user not found" }

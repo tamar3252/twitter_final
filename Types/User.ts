@@ -1,6 +1,7 @@
-import { Types } from "mongoose";
+import { ObjectId, Types } from "mongoose";
 
 export type User = {
+    _id:ObjectId|null,
     full_name: {
         first_name: String,
         last_name: String
@@ -8,5 +9,5 @@ export type User = {
     email: string;
     password: string;
     role: "admin" | "user";
-    follows: Types.ObjectId[];
+    follows:ObjectId[];
 }

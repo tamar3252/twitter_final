@@ -1,36 +1,38 @@
-import { ObjectId, Types } from "mongoose";
+import { ObjectId, Schema  } from "mongoose";
 import { Tweet } from "../../../Types/Tweet";
-const  TweetRepository  = require('./Tweet.repository')
-const { Request: ExpressRequest } = require("express");
-const { userManager } = require("../Users/Users.manager")
+import { AuthRequest } from "requestInterface";
+import * as TweetRepository from './Tweet.repository';
+import * as userManager from '../Users/Users.manager';
+import { User } from "../../../Types/User";
 
 export const getAllTweets = async (): Promise<Object> => {
-    const allTweets = await TweetRepository.getAllTweets()
+    const allTweets:Tweet[] = await TweetRepository.getAllTweets()
     return { status: 200, value: allTweets }
 }
 
-export const getTweetsWithFollower = async (req: typeof ExpressRequest): Promise<Object> => {
-    const followsId: ObjectId[] = (await userManager.getUserDetails(req)).value.follows
-    const allTweetswithFollower: [Tweet[]] = await TweetRepository.getTweetsWithFollower(followsId)
-    return { status: 200, value: allTweetswithFollower }
-}
-
-export const getTweet = async (req: typeof ExpressRequest): Promise<Object> => {
+export const getTweetsWithFollower = async (req: AuthRequest): Promise<Object> => {
+    const userDetails:{ status: number; value: User | string } = await userManager.getUserDetails(req);
+    const followsId: ObjectId[] = (userDetails.value as User).follows;
+    const allTweetswithFollower:Tweet[] = await TweetRepository.getTweetsWithFollower(followsId);
+    return { status: 200, value: allTweetswithFollower };
+};
+export const getTweet = async (req: AuthRequest): Promise<Object> => {
     const tweetId: ObjectId = req.body.tweet_id
     const userId: ObjectId = req.tokenData.user_id
     if (userId) {
-        const tweet: Tweet = await TweetRepository.getTweet(tweetId, userId).populate('user_id')
+        const tweet:Tweet  = await TweetRepository.getTweet(tweetId, userId)
         return { status: 200, value: tweet }
     }
-    const tweet: Tweet = await TweetRepository.getTweet(tweetId).populate('user_id')
+    const tweet:Tweet = await TweetRepository.getTweet(tweetId,null)
     return { status: 200, value: tweet }
 }
 
-export const addTweet = async (req: typeof ExpressRequest): Promise<Object> => {
+export const addTweet = async (req: AuthRequest): Promise<Object> => {
     const userId: ObjectId = req.tokenData.user_id;
     const text: String = req.body.text
 
     const tweet: Tweet = {
+        _id:null,
         text: text,
         user_id: userId,
         comments: null,
@@ -39,10 +41,11 @@ export const addTweet = async (req: typeof ExpressRequest): Promise<Object> => {
     await TweetRepository.addTweet(tweet)
     return { status: 200, value: tweet }
 }
-export const addComment = async (req: typeof ExpressRequest): Promise<Object> => {
+export const addComment = async (req: AuthRequest): Promise<Object> => {
     const userId: ObjectId = req.tokenData.user_id;
     const tweetId: ObjectId = req.body.tweetId
     const tweet: Tweet = {
+        _id:null,
         text: req.body.text,
         user_id: userId,
         comments: null,
@@ -52,7 +55,7 @@ export const addComment = async (req: typeof ExpressRequest): Promise<Object> =>
     await TweetRepository.addCommentIdToTweet(tweetId, commentId)
     return { status: 200, value: 'success' }
 }
-// deleteTweet: async (req: typeof ExpressRequest) => {
+// deleteTweet: async (req: AuthRequest) => {
 //     const userId = req.tokenData.user_id;
 //     const tweetId:ObjectId= req.params.tweet_id;
 

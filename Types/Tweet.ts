@@ -1,9 +1,10 @@
-import {ObjectId, Types } from "mongoose";
+import { ObjectId, Types } from "mongoose";
 
 
 export type Tweet = {
-    text:String,
-    user_id: ObjectId,
-    comments: ObjectId[]|null;
-    likes: ObjectId[]|null
-  };
+  _id: ObjectId |null
+  text: String,
+  user_id: ObjectId,
+  comments: ObjectId[] | null;
+  likes: ObjectId[] | null
+};

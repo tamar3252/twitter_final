@@ -1,9 +1,7 @@
 import { Request , Response   } from "express";
 import * as userManager from './Users.manager';
+import { AuthRequest } from "requestInterface";
 
-interface  AuthRequest extends Request {
-    tokenData: any 
-  }
 
 export const login = async (req:AuthRequest, res: Response) => {
     const respose = await userManager.login(req).catch((err: Error) => {
