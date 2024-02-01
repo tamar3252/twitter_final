@@ -10,7 +10,7 @@ export const findUserById = async (_id: ObjectId) :Promise<User>=> {
     return await UserModel.findOne({ _id })
 }
 export const addUser = async (userObj: Object):Promise<User> => {
-    let user = await new UserModel(userObj);
+    let user= await new UserModel(userObj);
     user.password = await bcrypt.hash(user.password, 10);
     await user.save();
     user.password = "********";

@@ -26,7 +26,6 @@ export const getTweet = async (req: AuthRequest): Promise<Object> => {
     const tweet:Tweet = await TweetRepository.getTweet(tweetId,null)
     return { status: 200, value: tweet }
 }
-
 export const addTweet = async (req: AuthRequest): Promise<Object> => {
     const userId: ObjectId = req.tokenData.user_id;
     const text: String = req.body.text

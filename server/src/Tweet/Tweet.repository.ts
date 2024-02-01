@@ -1,6 +1,6 @@
 import { TweetModel } from "../Models/TweetModel";
 import { Tweet } from "../../../Types/Tweet";
-import { Document, ObjectId } from 'mongoose';
+import { ObjectId } from 'mongoose';
 
 
 export const getAllTweets = async (): Promise<Tweet[]> => {

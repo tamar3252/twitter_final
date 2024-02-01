@@ -1,7 +1,7 @@
-import  { Types } from "mongoose";
+import  { ObjectId } from "mongoose";
 
 
 export type Like = {
-    user_id: Types.ObjectId,
-    tweet_id: Types.ObjectId,
+    user_id:ObjectId,
+    tweet_id: ObjectId,
   }
