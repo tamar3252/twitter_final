@@ -1,5 +1,4 @@
-import { ObjectId, Types } from "mongoose";
-
+import { ObjectId } from "mongoose";
 
 export type Tweet = {
   _id: ObjectId |null
