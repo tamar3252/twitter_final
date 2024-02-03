@@ -1,22 +1,22 @@
 import { ObjectId, Schema  } from "mongoose";
-import { Tweet } from "../../../Types/Tweet";
+import { GetAll, GetOne, Tweet } from "../../../Types/Tweet";
 import { AuthRequest } from "requestInterface";
 import * as TweetRepository from './Tweet.repository';
 import * as userManager from '../Users/Users.manager';
 import { User } from "../../../Types/User";
 
-export const getAllTweets = async (): Promise<{ status: number; value: Tweet[] | string }>  => {
+export const getAllTweets = async (): Promise<GetAll>  => {
     const allTweets:Tweet[] = await TweetRepository.getAllTweets()
     return { status: 200, value: allTweets }
 }
 
-export const getTweetsWithFollower = async (req: AuthRequest):  Promise<{ status: number; value: Tweet[] | string }>=> {
+export const getTweetsWithFollower = async (req: AuthRequest):  Promise<GetAll>=> {
     const userDetails:{ status: number; value: User | string } = await userManager.getUserDetails(req);
     const followsId: ObjectId[] = (userDetails.value as User).follows;
     const allTweetswithFollower:Tweet[] = await TweetRepository.getTweetsWithFollower(followsId);
     return { status: 200, value: allTweetswithFollower };
 };
-export const getTweet = async (req: AuthRequest): Promise<{ status: number; value: Tweet | string }> => {
+export const getTweet = async (req: AuthRequest): Promise<GetOne> => {
     const tweetId: ObjectId = req.body.tweet_id
     const userId: ObjectId = req.tokenData.user_id
     if (userId) {
@@ -26,7 +26,7 @@ export const getTweet = async (req: AuthRequest): Promise<{ status: number; valu
     const tweet:Tweet = await TweetRepository.getTweet(tweetId,null)
     return { status: 200, value: tweet }
 }
-export const addTweet = async (req: AuthRequest):  Promise<{ status: number; value: Tweet | string }>=> {
+export const addTweet = async (req: AuthRequest):  Promise<GetOne>=> {
     const userId: ObjectId = req.tokenData.user_id;
     const text: String = req.body.text
 
@@ -37,7 +37,7 @@ export const addTweet = async (req: AuthRequest):  Promise<{ status: number; val
     await TweetRepository.addTweet(tweet)
     return { status: 200, value: tweet }
 }
-export const addComment = async (req: AuthRequest):  Promise<{ status: number; value:  string }>=> {
+export const addComment = async (req: AuthRequest):  Promise<GetOne>=> {
     const userId: ObjectId = req.tokenData.user_id;
     const tweetId: ObjectId = req.body.tweetId
     const tweet: Tweet = {

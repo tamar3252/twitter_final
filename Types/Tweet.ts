@@ -7,3 +7,7 @@ export type Tweet = {
   comments?: ObjectId[] ,
   likes?: ObjectId[]
 };
+
+
+export type GetAll = { status: number; value: Tweet[] | string }
+export type GetOne = { status: number; value: Tweet | string }
