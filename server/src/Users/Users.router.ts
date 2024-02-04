@@ -1,9 +1,9 @@
-import expressUser from "express";
+import expressUser, { Router } from "express";
 import * as userController from "./Users.controller";
 import { authUser } from "../Auth";
 import * as userValidation from "./Users.validator";
 
-const routerUser = expressUser.Router();
+const routerUser:Router = expressUser.Router();
 
 routerUser.post("/login",userValidation.loginValidation, userController.login)
 routerUser.post("/signup",userValidation.signupValidation, userController.signup)

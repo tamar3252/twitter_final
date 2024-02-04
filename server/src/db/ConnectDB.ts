@@ -1,8 +1,7 @@
 const mongooseDB = require('mongoose');
 
-main().catch(err => console.log(err));
 
-async function main() {
+const main=async()=> {
     await mongooseDB.connect(
         `mongodb://localhost:27017/twitter`,
         {
@@ -13,3 +12,5 @@ async function main() {
 
     console.log("mongo connection")
 }
+
+main().catch((err:Error) => console.log(err));

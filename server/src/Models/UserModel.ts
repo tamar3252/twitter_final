@@ -1,13 +1,16 @@
 import mongoose, { Document, Schema, Types } from "mongoose";
-import {Roles, User} from '../../../Types/User'
+import { Roles, User, FullName } from '../../../Types/User'
+
+const fullNameSchema = new Schema<FullName>({
+    first_name: String,
+    last_name: String
+});
+
 
 type UserDocument = User & Document;
 
 const userSchema = new Schema<UserDocument>({
-    full_name: {
-        first_name: String,
-        last_name: String
-    },
+    full_name: fullNameSchema,
     email: String,
     password: String,
     role: { type: String, enum: Object.values(Roles), default: Roles.User },

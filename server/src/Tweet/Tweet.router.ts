@@ -1,9 +1,9 @@
-import express from "express";
+import express, { Router } from "express";
 import * as TweetController from "./Tweet.controller";
 import { authUser } from "../Auth";
 import * as tweetValidation from "./Tweet.validator";
 
-const routerTweet = express.Router();
+const routerTweet:Router = express.Router();
 
 routerTweet.get("/all_tweets",TweetController.getAllTweets)
 routerTweet.get("/tweet",TweetController.getTweet)

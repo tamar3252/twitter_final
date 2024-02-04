@@ -13,13 +13,7 @@ export const authUser = (req: AuthRequest, res: Response, next: NextFunction): R
   }
   try {
     const decodeToken: TokenData = (jwt.verify(token, config.tokenSecret)) as TokenData;
-
     req.tokenData = decodeToken as TokenData
-    // req.tokenData={
-    //   user_id: (decodeToken as TokenData).user_id,
-    //   role: (decodeToken as TokenData).role,
-
-    // };
     next();
   }
   catch (err: unknown) {
