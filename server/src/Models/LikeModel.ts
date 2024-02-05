@@ -3,9 +3,15 @@ import {Like} from '../../../Types/Like'
 
 type LikeDocument = Like & Document
 
-const LikeuserSchema = new Schema<LikeDocument>({
+
+const LikeSchema = new Schema<LikeDocument>({
   user_id: { type: Schema.Types.ObjectId, ref: "users" },
   tweet_id: { type: Schema.Types.ObjectId, ref: "tweets" },
 })
 
-exports.UserModel = mongoose.model("likes", LikeuserSchema);
+
+
+export const LikeModel = mongoose.model<LikeDocument>("likes", LikeSchema);
+
+// exports.UserModel = mongoose.model("users", userSchema);
+

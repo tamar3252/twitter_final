@@ -2,7 +2,6 @@ import jwt from "jsonwebtoken"
 import { config } from "./Config"
 import { Request, Response, NextFunction } from "express";
 import { AuthRequest, TokenData } from "requestInterface";
-import { Error } from "mongoose";
 
 
 export const authUser = (req: AuthRequest, res: Response, next: NextFunction): Response => {

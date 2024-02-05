@@ -9,5 +9,5 @@ export type Tweet = {
 };
 
 
-export type GetAll = { status: number; value: Tweet[] | string }
-export type GetOne = { status: number; value: Tweet | string }
+export type GetTweets = { status: number; value: Tweet[] | string }
+export type GetTweet = { status: number; value: Tweet | string }

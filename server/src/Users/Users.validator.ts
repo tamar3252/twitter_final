@@ -10,6 +10,7 @@ export const signupValidation = (req: Request, res: Response, next: NextFunction
     },
     email: Joi.string().email().required(),
     password: Joi.string().min(3).max(200).required(),
+    image:Joi.string(),
     role: Joi.string().valid("admin", "professional", "client")
   })
   const validBody = joiSchema.validate(req.body)

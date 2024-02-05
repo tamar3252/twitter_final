@@ -5,5 +5,5 @@ export type Like = {
   tweet_id: ObjectId,
 }
 
-export type Add = { status: number; value: Like  }
-export type Remove = { status: number; value: Like |ObjectId }
+export type AddLike = { status: number; value: Like  }
+export type RemoveLike = { status: number; value: Like |ObjectId }

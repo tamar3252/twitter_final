@@ -13,6 +13,7 @@ const userSchema = new Schema<UserDocument>({
     full_name: fullNameSchema,
     email: String,
     password: String,
+    image:String,
     role: { type: String, enum: Object.values(Roles), default: Roles.User },
     follows: [{ type: Schema.Types.ObjectId, ref: "users" }]
 })

@@ -4,15 +4,17 @@ import { ObjectId } from 'mongoose';
 
 
 export const getAllTweets = async (): Promise<Tweet[]> => {
-    return await TweetModel.find()
+    return await TweetModel.find().populate('user_id')
 }
 export const getTweetsWithFollower = async (follows: ObjectId[]): Promise<Tweet[]> => {
-    return await TweetModel.find({ user_id: { $in: follows } })
+    return await TweetModel.find({ user_id: { $in: follows } }).populate('user_id')
 }
 export const getTweet = async (tweetId: ObjectId, userId: ObjectId): Promise<Tweet> => {
+console.log('lllllllllllllll');
+
     if (userId)///
-        return await TweetModel.findOne({ user_id: userId, _id: tweetId }).populate('user_id')
-  return await TweetModel.findOne({ _id: tweetId }).populate('user_id')
+        return await TweetModel.findOne({ user_id: userId, _id: tweetId }).populate('user_id').exec()
+  return await TweetModel.findOne({ _id: tweetId }).populate('user_id').exec()
 }
 
 export const addTweet = async (tweetObj: Object): Promise<Tweet> => {
@@ -23,6 +25,11 @@ export const addTweet = async (tweetObj: Object): Promise<Tweet> => {
 export const addCommentIdToTweet = async (tweetId: ObjectId, commentId: ObjectId): Promise<void> => {
     await TweetModel.updateOne({ _id: tweetId }, { $addToSet: { comments: commentId } })
 }
+
+export const addLike = async (tweetId:ObjectId ,liketId: ObjectId): Promise<void> => {
+    await TweetModel.updateOne({ _id: tweetId }, { $addToSet: { likes: liketId } })
+}
+
 export const deleteTweet = async (tweetId: ObjectId, userId: ObjectId) => {
     return await TweetModel.deleteOne({ _id: tweetId });
 

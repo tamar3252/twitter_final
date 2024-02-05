@@ -12,8 +12,8 @@ export const tweetValidation = (req: Request, res: Response, next: NextFunction)
         res.status(400).json("ERROR: invalid details " + validBody.error.details[0].message)
     }
         next()
-
 }
+
 export const commentValidation = (req: Request, res: Response, next: NextFunction) => {
     const joiSchema = Joi.object({
         text: Joi.string().required(),

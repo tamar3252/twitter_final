@@ -13,11 +13,12 @@ export type User = {
     full_name: FullName
     email: string;
     password: string;
-    role: Roles;
-    follows: ObjectId[];
+    role?: Roles;
+    follows?: ObjectId[];
+    image:string
 }
 
-export type Signup = { status: number; value: User | string | { token: string, user: User } }
-export type Login = { status: number; value: User | string | { token: string, user: User } }
+export type UserSignup = { status: number; value: User | string | { token: string, user: User } }
+export type UserLogin = { status: number; value: User | string | { token: string, user: User } }
 export type GetUserDetails = { status: number; value: User | string }
-export type Update = { status: number; value: string }
+export type UpdateUser = { status: number; value: string }
