@@ -1,9 +1,9 @@
 import { NavigateFunction } from "react-router-dom";
-import {User} from '../../../../../Types/User'
+import {User} from '../../../../Types/User'
 import Cookies from "js-cookie";
 
 
-export const signup = async (body: User, nav: NavigateFunction):Promise<void> => {
+export const signup = async (body: User, nav: NavigateFunction):Promise<void|string> => {
   try {
     const response = await fetch('http://localhost:3000/user/signup', {
       method: 'POST',
@@ -14,9 +14,13 @@ export const signup = async (body: User, nav: NavigateFunction):Promise<void> =>
          email: body.email, password: body.password }),
     });
     const data = await response.json();
-    Cookies.set('token', data.token)
-    if (data.token)
+    if (data.token){
+      Cookies.set('token', data.token)
       nav('/home')
+    }
+    else{
+      return data
+    }
   } catch (error) {
     console.error('Error fetching data:', error);
   }
