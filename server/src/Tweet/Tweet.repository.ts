@@ -10,8 +10,6 @@ export const getTweetsWithFollower = async (follows: ObjectId[]): Promise<Tweet[
     return await TweetModel.find({ user_id: { $in: follows } }).populate('user_id')
 }
 export const getTweet = async (tweetId: ObjectId, userId: ObjectId): Promise<Tweet> => {
-console.log('lllllllllllllll');
-
     if (userId)///
         return await TweetModel.findOne({ user_id: userId, _id: tweetId }).populate('user_id').exec()
   return await TweetModel.findOne({ _id: tweetId }).populate('user_id').exec()

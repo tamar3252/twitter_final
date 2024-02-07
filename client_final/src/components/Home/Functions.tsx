@@ -1,7 +1,7 @@
 import Cookies from "js-cookie";
-import {Tweet} from '../../../../../Types/Tweet'
+import {Tweet} from '../../../../Types/Tweet'
 import { UseQueryResult, useQuery } from "react-query";
-import {User} from '../../../../../Types/User'
+import {User} from '../../../../Types/User'
 import { allTweetsQuery } from "./Types";
 
 export const getAllTweets = async (): Promise<Tweet[] | undefined> => {

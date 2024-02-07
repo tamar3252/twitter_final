@@ -1,9 +1,10 @@
-import React, { ChangeEvent, useEffect, useState } from 'react'
-import { getAllFollowsTweets, getAllTweets, sortByNew, sortByPopular, useAllFollowsTweetsQuery, useAllTweetsQuery } from './Functions'
-import {Tweet} from '../../../../../Types/Tweet'
+import React, { ChangeEvent, useState } from 'react'
+import { sortByNew, sortByPopular, useAllFollowsTweetsQuery, useAllTweetsQuery } from './Functions'
+import { Tweet } from '../../../../Types/Tweet'
 import { TweetCopm } from '../Tweet/Tweet'
-import { QueryClient, QueryClientProvider, useMutation, useQuery } from 'react-query'
+import { QueryClient, useMutation } from 'react-query'
 import UserDetails from '../UserDetails'
+import { Grid } from '@mui/material'
 
 const Home = () => {
     const queryClient: QueryClient = new QueryClient();
@@ -40,7 +41,6 @@ const Home = () => {
         }
     );
 
-
     const handleChange = (e: ChangeEvent<HTMLSelectElement>): void => {
         mutation.mutate(e.target.value)
     };
@@ -60,11 +60,31 @@ const Home = () => {
                 </select>
             </div>
 
-            {listIndex == 0 && allTweets && allTweets.map(element => (
-                <div key={element._id}>
-                    <TweetCopm tweet={element} />
-                </div>
-            ))}
+            <Grid container rowSpacing={1} columnSpacing={1}>
+                {listIndex == 0 && allTweets && allTweets.map(element => (
+                    <Grid item xs={6}>
+                        <div key={element._id}>
+                            <TweetCopm tweet={element} />
+                        </div>
+                    </Grid>
+
+                ))}
+
+            </Grid>
+            {/* <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                <Grid item xs={6}>
+                    <p>1hhhhhhhhhhhhhhhhhhhhhhhhhhhhh</p>
+                </Grid>
+                <Grid item xs={6}>
+                <p>1hhhhhhhhhhhhhhhhhhhhhhhhhhhhh</p>
+                </Grid>
+                <Grid item xs={6}>
+                <p>1hhhhhhhhhhhhhhhhhhhhhhhhhhhhh</p>
+                </Grid>
+                <Grid item xs={6}>
+                <p>1hhhhhhhhhhhhhhhhhhhhhhhhhhhhh</p>
+                </Grid>
+            </Grid> */}
 
             {listIndex == 1 && allFollowsTweets && allFollowsTweets.map(element => (
                 <div key={element._id}>
@@ -72,12 +92,7 @@ const Home = () => {
                 </div>
             ))
             }
-
-
-
         </div>
-
-
     )
 }
 

@@ -1,5 +1,5 @@
-import {Tweet} from '../../../../../Types/Tweet'
+import {Tweet} from '../../../../Types/Tweet'
 
 export interface TweetCopmProps {
-    tweet: Tweet;
+  tweet: Tweet;
   }

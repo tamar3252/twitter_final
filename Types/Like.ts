@@ -1,6 +1,7 @@
 import { ObjectId } from "mongoose";
 
 export type Like = {
+  _id?: ObjectId 
   user_id: ObjectId,
   tweet_id: ObjectId,
 }
