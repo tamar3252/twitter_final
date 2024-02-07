@@ -13,7 +13,6 @@ export const login = async (body: FormInputs, nav: NavigateFunction): Promise<vo
       body: JSON.stringify({ email: body.email, password: body.password }),
     });
     const data = await response.json();
-    console.log(data,'lllllllllllllll');
     
     if (data.token) {
       Cookies.set('token', data.token)
