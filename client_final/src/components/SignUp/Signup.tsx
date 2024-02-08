@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { User } from '../../../../Types/User';
@@ -6,13 +6,15 @@ import { Box, Grid, Typography, TextField, FormControl, Button } from '@mui/mate
 import { useNavigate } from 'react-router-dom';
 import { signup } from './Functions';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { toast } from 'react-toastify';
 
 const Signup: FC = () => {
   const navigate = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm<User>();
 
   const onSubmit = async (data: User) => {
-    const res = await signup(data, navigate);
+     await signup(data, navigate).catch((err: Error) =>
+     toast.error(err.message));
   }
 
   return (

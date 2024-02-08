@@ -6,7 +6,7 @@ import { Box, Grid, Typography, TextField, FormControl, Button } from '@mui/mate
 import { useNavigate } from 'react-router-dom';
 import { login } from './Functions';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Login: FC = () => {
@@ -14,15 +14,15 @@ const Login: FC = () => {
   const { register, handleSubmit, formState: { errors } } = useForm<FormInputs>();
 
   const onSubmit = async (data: FormInputs) => {
-   await login(data, navigate);
+    await login(data, navigate).catch((err: Error) =>
+      toast.error(err.message));
   }
-
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
-      <ToastContainer/>
+      <ToastContainer />
 
-    
+
       <Box minHeight="100vh" maxWidth="70vh" display="flex" alignItems="center" justifyContent="center">
         <Grid container spacing={3}>
           <Grid item xs={12}>
@@ -67,12 +67,12 @@ const Login: FC = () => {
                 {/* <Link to=""></Link> */}
 
                 <Grid item xs={12}>
-                  <Typography  align="center">
-                    already jave account? 
-                  <Link to="/signup">SignUp</Link>
+                  <Typography align="center">
+                    already jave account?
+                    <Link to="/signup">SignUp</Link>
 
                   </Typography>
-                </Grid>             
+                </Grid>
               </Grid>
             </form>
           </Grid>

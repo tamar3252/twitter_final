@@ -48,7 +48,6 @@ const Tweets = () => {
     mutation.mutate(e.target.value)
   };
 
-
   return (
     <div>
       <ToastContainer />
