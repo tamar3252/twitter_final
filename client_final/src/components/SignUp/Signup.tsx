@@ -8,13 +8,11 @@ import { signup } from './Functions';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
 const Signup: FC = () => {
-  const [error, serError] = useState<string>();
   const navigate = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm<User>();
 
   const onSubmit = async (data: User) => {
     const res = await signup(data, navigate);
-    serError(res as string);
   }
 
   return (
@@ -86,14 +84,7 @@ const Signup: FC = () => {
                   <Typography align="center">
                     Already have an account? <Link to="/">Log In</Link>
                   </Typography>
-                </Grid>
-                {error && (
-                  <Grid item xs={12}>
-                    <Typography color="error" align="center">
-                      {error}
-                    </Typography>
-                  </Grid>
-                )}
+                </Grid>               
               </Grid>
             </form>
           </Grid>

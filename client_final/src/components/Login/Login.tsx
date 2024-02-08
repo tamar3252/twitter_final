@@ -6,20 +6,23 @@ import { Box, Grid, Typography, TextField, FormControl, Button } from '@mui/mate
 import { useNavigate } from 'react-router-dom';
 import { login } from './Functions';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login: FC = () => {
-  const [error, setError] = useState<string>('');
   const navigate = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm<FormInputs>();
 
   const onSubmit = async (data: FormInputs) => {
-    const res = await login(data, navigate);
-    setError(res as string);
+   await login(data, navigate);
   }
 
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+      <ToastContainer/>
+
+    
       <Box minHeight="100vh" maxWidth="70vh" display="flex" alignItems="center" justifyContent="center">
         <Grid container spacing={3}>
           <Grid item xs={12}>
@@ -69,14 +72,7 @@ const Login: FC = () => {
                   <Link to="/signup">SignUp</Link>
 
                   </Typography>
-                </Grid>
-                {error && (
-                  <Grid item xs={12}>
-                    <Typography color="error" align="center">
-                      {error}
-                    </Typography>
-                  </Grid>
-                )}
+                </Grid>             
               </Grid>
             </form>
           </Grid>
