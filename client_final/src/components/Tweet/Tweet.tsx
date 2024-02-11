@@ -13,9 +13,6 @@ const TweetCopm: FC<TweetCopmProps> = ({ tweet }) => {
     const [comments, setComments] = useState<Tweet[]>([])
     const [displayUserDetailsBox, setDisplayUserDetailsBox] = useState(false)
 
-    
-      
-
     const sx: SxProps = {
         "& .MuiDialog-container": {
           alignItems: "flex-start"
@@ -90,9 +87,13 @@ const TweetCopm: FC<TweetCopmProps> = ({ tweet }) => {
 
 
                     <div onClick={() => {
-                        tweet.comments?.forEach(async element => {
+                        tweet.comments?.forEach(async element => {//add catch
                             const comment = await showComments(element)
                             comments ? setComments((prevComments) => [...prevComments, comment]) : setComments([comment])
+                            // await showComments(element).then((comment)=>
+                            // comments ? setComments((prevComments) => [...prevComments, comment]) : setComments([comment])
+                            // )
+
                         })
                     }
                     }>

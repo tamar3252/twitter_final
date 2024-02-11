@@ -17,25 +17,24 @@ const Tweets = () => {
 
   const [listIndex, setListIndex] = useState<number>(0)
 
-  const mutation = useMutation<Tweet[] | undefined, Error, string>(
+  const mutation = useMutation<Tweet[], Error, string>(
     async (type: string) => {
-      if (type === 'new') {
-        setListIndex(0)
-        return sortByNew(allTweets);
+      switch (type) {
+        case 'new':
+          setListIndex(0)
+          return allTweets ? sortByNew(allTweets) : [];
+        case 'popular':
+          setListIndex(0)
+          return allTweets ? sortByPopular(allTweets) : [];
+        case 'new_from_followers':
+          setListIndex(1)
+          return allTweets ? sortByNew(allTweets) : [];
+        case 'popular_from_followers':
+          setListIndex(1)
+          return allTweets ? sortByPopular(allTweets) : [];
+        default:
+          return [];
       }
-      else if (type === 'popular') {
-        setListIndex(0)
-        return sortByPopular(allTweets);
-      }
-      else if (type === 'new_from_followers') {
-        setListIndex(1)
-        return sortByNew(allFollowsTweets);
-      }
-      else if (type === 'popular_from_followers') {
-        setListIndex(1)
-        return sortByPopular(allFollowsTweets);
-      }
-      return undefined;
     },
     {
       onSuccess: (newData) => {
@@ -43,6 +42,7 @@ const Tweets = () => {
       },
     }
   );
+  
 
   const sortTweets = (e: ChangeEvent<HTMLSelectElement>): void => {
     mutation.mutate(e.target.value)
