@@ -1,4 +1,5 @@
 import { ObjectId } from "mongoose";
+import { User } from "./User";
 
 export type Tweet = {
   _id?: ObjectId 

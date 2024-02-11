@@ -9,13 +9,13 @@ export enum Roles {
     User = "user"
 }
 export type User = {
-    _id?: ObjectId,
+    _id?: ObjectId ,
     full_name: FullName
     email: string;
     password: string;
     role?: Roles;
     follows?: ObjectId[];
-    image:string
+    image: string
 }
 
 export type UserSignup = { status: number; value: User | string | { token: string, user: User } }

@@ -5,7 +5,7 @@ import {LikeModel} from '../Models/LikeModel'
 
 export const addLike = async (likeObj: Like): Promise<Document<Like>>  => {
     const like:Document<Like> = await new LikeModel(likeObj);
-    await like.save();    
+    await like.save() 
     return like
 }
 

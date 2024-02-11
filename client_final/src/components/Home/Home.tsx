@@ -4,7 +4,7 @@ import Tweets from '../Tweets.tsx'
 const Home = () => {    
     return (
         <div>
-            <UserDetails></UserDetails>
+            {/* <UserDetails></UserDetails> */}
             <Tweets></Tweets>
         </div>
     )
