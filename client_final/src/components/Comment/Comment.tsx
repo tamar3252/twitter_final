@@ -10,7 +10,6 @@ import { addComment } from './Functions';
 const Comment: FC<CommentCopmProps> = ({ tweet }) => {
     const [displayCommentBox, setDisplayCommentBox] = useState(false)
     const [commentText, setCommentText] = useState<string>()
-
     const [commentsNum, setCommentsNum] = useState(tweet.comments?.length || 0)
 
     const handleLikeClick = async (tweetId: ObjectId) => {

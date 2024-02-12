@@ -1,20 +1,31 @@
-import { Alert, Button } from '@mui/material'
+import { Button } from '@mui/material'
 import { ObjectId } from 'mongoose'
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { LikeCopmProps } from './Types'
-import { addLike, removeLike } from './Functions'
+import { addLike, checkIsLiked, removeLike } from './Functions'
 import { toast } from 'react-toastify';
+import { Like } from '../../../../Types/Like';
 
 const Like: FC<LikeCopmProps> = ({ tweet }) => {
 
-    const [likesNum, setLikesNum] = useState(tweet.likes?.length)
-    const [liked, setLiked] = useState(false);
+    const [liked, setLiked] = useState<boolean>();
     const [likeId, setLikeId] = useState<ObjectId>()
+    const [likesNum, setLikesNum] = useState(tweet.likes?.length)
+
+    useEffect(() => {
+        checkIsLikedFunc();
+    }, []) 
+
+
+    const checkIsLikedFunc = async () => {
+        const like :Like= await checkIsLiked(tweet._id)
+        like ? (setLiked(true), setLikeId(like._id)) : setLiked(false)
+    }
 
     const likeClick = async (tweetId: ObjectId): Promise<void> => {
-        setLikesNum(liked ? tweet.likes?.length : tweet.likes ? tweet.likes?.length + 1 : 1)
+        setLikesNum(liked ? likesNum - 1 : tweet.likes ? likesNum + 1 : 1)
         setLiked((prevLiked) => !prevLiked);
 
         const add = async (): Promise<void> => {
@@ -24,6 +35,7 @@ const Like: FC<LikeCopmProps> = ({ tweet }) => {
         }
 
         const remove = async (): Promise<void> => {
+            console.log(likeId, tweetId);
             likeId && await removeLike(tweetId, likeId)
                 .catch((err: Error) =>
                     toast.error(err.message))

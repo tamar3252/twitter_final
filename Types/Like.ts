@@ -8,3 +8,4 @@ export type Like = {
 
 export type AddLike = { status: number; value: Like  }
 export type RemoveLike = { status: number; value: Like |ObjectId }
+export type GetLike = {status:number,value:Like}

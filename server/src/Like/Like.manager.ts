@@ -1,11 +1,9 @@
 import { ObjectId } from "mongoose";
-import { AddLike, Like, RemoveLike } from "../../../Types/Like";
+import { AddLike, GetLike, Like, RemoveLike } from "../../../Types/Like";
 
 import { AuthRequest } from "requestInterface";
 import * as likeRepository from './Like.repository'
 import * as tweetManager from '../Tweet/Tweet.manager'
-
-
 
 const ObjectId = require('mongoose').ObjectID;
 
@@ -31,6 +29,13 @@ export const removeLike = async (req: AuthRequest): Promise<RemoveLike> => {
     const res = await likeRepository.removeLike(userId, likeId)
     await tweetManager.removeLike(tweetId, likeId)
     return { status: 200, value: likeId }
+}
+
+export const getLike=async (req: AuthRequest):Promise<GetLike> => {
+    const userId: ObjectId = req.tokenData.user_id;
+    const tweetId: ObjectId = (req.params.tweet_id) as ObjectId
+    const res:Like = await likeRepository.getLike(userId, tweetId)
+    return { status: 200, value: res }
 }
 
 
