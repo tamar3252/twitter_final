@@ -3,8 +3,8 @@ import { Tweet } from "../../../Types/Tweet";
 import { ObjectId } from 'mongoose';
 
 
-export const getAllTweets = async (): Promise<Tweet[]> => {
-    return await TweetModel.find().populate('user_id')
+export const getAllTweets = async ( userId: ObjectId): Promise<Tweet[]> => {
+    return await TweetModel.find({ user_id: { $ne: userId } }).populate('user_id')
 }
 export const getTweetsWithFollower = async (follows: ObjectId[]): Promise<Tweet[]> => {
     return await TweetModel.find({ user_id: { $in: follows } }).populate('user_id')

@@ -10,18 +10,18 @@ import { toast } from 'react-toastify';
 
 const Comment: FC<CommentCopmProps> = ({ tweet }) => {
     const [displayCommentBox, setDisplayCommentBox] = useState(false)
-    const [commentText, setCommentText] = useState<string>()
+    const [commentText, setCommentText] = useState<string>("")
     const [commentsNum, setCommentsNum] = useState(tweet.comments?.length || 0)
 
-    const handleLikeClick = async (tweetId: ObjectId) => {
+    const addCommentClick = async () => {
         setDisplayCommentBox(true)
     }
 
 
     return (
         <div>
-            <Button onClick={() => handleLikeClick(tweet._id)}>
-                {<ChatBubbleOutlineIcon color="blue" />}
+            <Button onClick={() => addCommentClick()}>
+                {<ChatBubbleOutlineIcon color="primary" />}
                 {commentsNum}
             </Button>
 
@@ -37,7 +37,7 @@ const Comment: FC<CommentCopmProps> = ({ tweet }) => {
                     <form
                         onSubmit={(event) => {
                             event.preventDefault();
-                            addComment(tweet._id, commentText).catch((err:Error)=>toast.error(err.message))
+                            addComment(tweet._id!, commentText).catch((err:Error)=>toast.error(err.message))
                             setCommentsNum((prev) => prev + 1);
                         }}>
 

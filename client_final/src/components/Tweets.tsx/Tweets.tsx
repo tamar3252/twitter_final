@@ -3,7 +3,7 @@ import { sortByNew, sortByPopular, getAllFollowsTweets, getAllTweets } from './F
 import { Tweet } from '../../../../Types/Tweet'
 import { TweetCopm } from '../Tweet/Tweet'
 import { QueryClient, useMutation } from 'react-query'
-import { FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material'
+import { FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material'
 import { ToastContainer, toast } from 'react-toastify'
 
 const Tweets = () => {
@@ -28,10 +28,10 @@ const Tweets = () => {
           return allTweets ? sortByPopular(allTweets) : [];
         case 'new_from_followers':
           setListIndex(1)
-          return allTweets ? sortByNew(allTweets) : [];
+          return allFollowsTweets ? sortByNew(allFollowsTweets) : [];
         case 'popular_from_followers':
           setListIndex(1)
-          return allTweets ? sortByPopular(allTweets) : [];
+          return allFollowsTweets ? sortByPopular(allFollowsTweets) : [];
         default:
           return [];
       }
@@ -44,8 +44,8 @@ const Tweets = () => {
   );
   
 
-  const sortTweets = (e: ChangeEvent<HTMLSelectElement>): void => {
-    mutation.mutate(e.target.value)
+  const sortTweets = (e: SelectChangeEvent<HTMLSelectElement>): void => {
+    mutation.mutate(String(e.target.value))
   };
 
   return (
@@ -71,7 +71,7 @@ const Tweets = () => {
           toast.info('Loading tweets...') :
           listIndex == 0 && allTweets && allTweets.map(element => (
             <Grid item xs={6}>
-              <div key={element._id}>
+              <div key={String(element._id)}>
                 <TweetCopm tweet={element} />
               </div>
             </Grid>
@@ -81,7 +81,7 @@ const Tweets = () => {
       {isLoadingAllFollowsTweets ?
         toast.info('Loading tweets...') :
         listIndex == 1 && allFollowsTweets && allFollowsTweets.map(element => (
-          <div key={element._id}>
+          <div key={String(element._id)}>
             <TweetCopm tweet={element} />
           </div>
         ))}

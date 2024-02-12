@@ -19,12 +19,12 @@ const TweetCopm: FC<TweetCopmProps> = ({ tweet }) => {
             <Box >
                 <Grid border={1} margin={2} padding={2} borderRadius={5} boxShadow={2} style={{ position: 'relative' }}>
 
-                    <UserDetails user={tweet.user_id as User}></UserDetails>
+                    <UserDetails user={tweet.user_id as unknown as User}></UserDetails>
 
                     <div onClick={() => {
                         tweet.comments?.forEach(async commentId => {
-                            const comment: string | number | Tweet[] = await getComment(commentId).catch((err: Error) => toast.error(err.message))
-                            comments ? setComments((prevComments) => [...prevComments, comment]) : setComments([comment])
+                            const comment: string | number | Tweet = await getComment(commentId).catch((err: Error) => toast.error(err.message))
+                            comments ? setComments((prevComments) => [...prevComments, comment as Tweet]) : setComments([comment as Tweet])
                         })
                     }
                     }>
@@ -38,7 +38,7 @@ const TweetCopm: FC<TweetCopmProps> = ({ tweet }) => {
                     </Grid>
 
                     {comments?.map(element => (
-                        <div key={element._id}>
+                        <div key={String(element._id)}>
                             <TweetCopm tweet={element} />
                         </div>
                     ))}

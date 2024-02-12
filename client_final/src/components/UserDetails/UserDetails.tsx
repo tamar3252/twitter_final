@@ -6,14 +6,14 @@ import { User } from '../../../../Types/User';
 import { toast } from 'react-toastify';
 
 const UserDetails: FC<UserCopmProps> = ({ user }) => {
-    const { data: userDetails, isLoading: isLoading3, isError: isError3 } = useUserDetailsQuery();
+    const { data: userDetails } = useUserDetailsQuery();
 
     const [displayUserBox, setDisplayUserBox] = useState(false)
     const [isFollow, setIsFollow] = useState<boolean>()
 
 
     const checkIsFollowFunc = async () => {
-        const res: User | string | number = await checkIsFollow(user._id).catch((err: Error) => toast.error(err.message))
+        const res: User | string | number = await checkIsFollow(user._id!).catch((err: Error) => toast.error(err.message))
         res ? setIsFollow(true) : setIsFollow(false)
     }
 
@@ -50,7 +50,7 @@ const UserDetails: FC<UserCopmProps> = ({ user }) => {
                                 <Typography variant="body1">
                                     {user.full_name.first_name} {user.full_name.last_name}
                                 </Typography>
-                                <Button onClick={() => isFollow ? (removeFollow(user._id),setIsFollow(false)):(addFollow(user._id),setIsFollow(true))}>{isFollow ? "unFollow" : "follow"}</Button>
+                                <Button onClick={() => isFollow ? (removeFollow(user._id!),setIsFollow(false)):(addFollow(user._id!),setIsFollow(true))}>{isFollow ? "unFollow" : "follow"}</Button>
                             </Box>
                         )}
                     </div>

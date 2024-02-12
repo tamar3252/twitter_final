@@ -12,6 +12,7 @@ export const getAllTweets = (): allTweetsQuery => {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Authorization': `${Cookies.get('token')}`
                     },
                 });
                 return await response.json();
@@ -39,7 +40,8 @@ export const getAllFollowsTweets = (): allTweetsQuery => {
 }
 
 export const sortByNew = (allTweets: Tweet[] ): Tweet[] => {
-    return allTweets.sort((a, b) => b._id.localeCompare(a._id));
+    return allTweets.sort((a, b) => String(b._id).localeCompare(String(a._id)));
+    // return allTweets.sort((a, b) => b._id.toHexString().localeCompare(a._id.toHexString()));
 }
 
 export const sortByPopular = (allTweets: Tweet[] ): Tweet[] => {

@@ -8,8 +8,9 @@ import { UpdateUser, User } from "../../../Types/User";
 const ObjectId = require('mongoose').ObjectID;
 
 
-export const getAllTweets = async (): Promise<GetTweets> => {
-    const allTweets: Tweet[] = await TweetRepository.getAllTweets()
+export const getAllTweets = async (req: AuthRequest): Promise<GetTweets> => {
+    const userId: ObjectId = req.tokenData?.user_id
+    const allTweets: Tweet[] = await TweetRepository.getAllTweets(userId)
     return { status: 200, value: allTweets }
 }
 
@@ -34,6 +35,7 @@ export const addTweet = async (req: AuthRequest): Promise<GetTweet> => {
     const text: String = req.body.text
 
     const tweet: Tweet = {
+      
         text: text,
         user_id: userId,
     }
@@ -44,6 +46,7 @@ export const addComment = async (req: AuthRequest): Promise<GetTweet> => {
     const userId: ObjectId = req.tokenData.user_id;
     const tweetId: ObjectId = req.body.tweetId
     const tweet: Tweet = {
+    
         text: req.body.text,
         user_id: userId,
     }

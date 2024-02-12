@@ -31,10 +31,10 @@ export const removeLike = async (req: AuthRequest): Promise<RemoveLike> => {
     return { status: 200, value: likeId }
 }
 
-export const getLike=async (req: AuthRequest):Promise<GetLike> => {
+export const getLike = async (req: AuthRequest): Promise<GetLike> => {
     const userId: ObjectId = req.tokenData.user_id;
     const tweetId: ObjectId = (req.params.tweet_id) as ObjectId
-    const res:Like = await likeRepository.getLike(userId, tweetId)
+    const res: Like = await likeRepository.getLike(userId, tweetId)
     return { status: 200, value: res }
 }
 

@@ -3,7 +3,7 @@ import { GetTweets, GetTweet } from "../../../Types/Tweet";
 const TweetManager = require('./Tweet.manager');
 
 export const getAllTweets = async (req: Request, res: Response):Promise<void> => {
-    const respose:GetTweets = await TweetManager.getAllTweets().catch((err: Error) => {
+    const respose:GetTweets = await TweetManager.getAllTweets(req).catch((err: Error) => {
         return { status: 500, value: err.message }
     })
     res.status(respose.status).json(respose.value)
