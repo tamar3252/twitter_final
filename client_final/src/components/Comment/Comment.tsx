@@ -5,6 +5,7 @@ import React, { FC, useState } from 'react'
 import { CommentCopmProps } from './Types'
 import Textarea from '@mui/joy/Textarea';
 import { addComment } from './Functions';
+import { toast } from 'react-toastify';
 
 
 const Comment: FC<CommentCopmProps> = ({ tweet }) => {
@@ -16,12 +17,6 @@ const Comment: FC<CommentCopmProps> = ({ tweet }) => {
         setDisplayCommentBox(true)
     }
 
-
-    const sx: SxProps = {
-        "& .MuiDialog-container": {
-            alignItems: "flex-center"
-        }
-    };
 
     return (
         <div>
@@ -36,14 +31,13 @@ const Comment: FC<CommentCopmProps> = ({ tweet }) => {
                 aria-labelledby="simple-dialog-title"
                 open={displayCommentBox}
                 scroll="paper"
-            //       sx={sx}
 
             >
                 <Box alignItems="center" border={1} borderRadius={2} sx={{ display: displayCommentBox ? 'block' : 'none' }}>
                     <form
                         onSubmit={(event) => {
                             event.preventDefault();
-                            addComment(tweet._id, commentText)
+                            addComment(tweet._id, commentText).catch((err:Error)=>toast.error(err.message))
                             setCommentsNum((prev) => prev + 1);
                         }}>
 

@@ -1,9 +1,9 @@
 import Cookies from "js-cookie";
 import { ObjectId } from "mongoose";
+import { Tweet } from "../../../../Types/Tweet";
 
-export const addComment=async(tweetId:ObjectId,text:string)=>{      
-    try {
-        const response = await fetch('http://localhost:3000/tweet/add_comment_to_tweet', {
+export const addComment=async(tweetId:ObjectId,text:string):Promise<Tweet>=>{      
+        const response:Response = await fetch('http://localhost:3000/tweet/add_comment_to_tweet', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -11,9 +11,5 @@ export const addComment=async(tweetId:ObjectId,text:string)=>{
             },
             body: JSON.stringify({tweetId:tweetId,text:text})     
         })
-        const res= await response.json();        
-        return res
-    } catch (error) {
-        console.error('Error fetching data:', error);
-    }
+        return await response.json();        
 }

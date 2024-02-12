@@ -1,4 +1,4 @@
-import { Button } from '@mui/material'
+import { Alert, Button } from '@mui/material'
 import { ObjectId } from 'mongoose'
 import React, { FC, useEffect, useState } from 'react'
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -6,7 +6,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { LikeCopmProps } from './Types'
 import { addLike, checkIsLiked, removeLike } from './Functions'
 import { toast } from 'react-toastify';
-import { Like } from '../../../../Types/Like';
+import { Like as likeType } from '../../../../Types/Like';
 
 const Like: FC<LikeCopmProps> = ({ tweet }) => {
 
@@ -20,7 +20,7 @@ const Like: FC<LikeCopmProps> = ({ tweet }) => {
 
 
     const checkIsLikedFunc = async () => {
-        const like :Like= await checkIsLiked(tweet._id)
+        const like:likeType = await checkIsLiked(tweet._id)
         like ? (setLiked(true), setLikeId(like._id)) : setLiked(false)
     }
 
