@@ -16,3 +16,4 @@ export const removeLike = async (userId: ObjectId, likeId: ObjectId): Promise<De
 export const getLike = async (userId: ObjectId,tweetId: ObjectId): Promise<Like> => {
     return await LikeModel.findOne({ user_id: userId, tweet_id: tweetId })
 }
+

@@ -1,4 +1,4 @@
-import { ObjectId, Schema } from "mongoose";
+import { ObjectId, Schema  } from "mongoose";
 import { GetTweets, GetTweet, Tweet } from "../../../Types/Tweet";
 import { AuthRequest } from "requestInterface";
 import * as TweetRepository from './Tweet.repository';
@@ -13,10 +13,10 @@ export const getAllTweets = async (): Promise<GetTweets> => {
     return { status: 200, value: allTweets }
 }
 
-export const getTweetsWithFollower = async (req: AuthRequest): Promise<GetTweets> => {
-    const userDetails: { status: number; value: User | string } = await userManager.getUserDetails(req);
+export const getTweetsWithFollower = async (req: AuthRequest):  Promise<GetTweets>=> {
+    const userDetails:{ status: number; value: User | string } = await userManager.getUserDetails(req);
     const followsId: ObjectId[] = (userDetails.value as User).follows;
-    const allTweetswithFollower: Tweet[] = await TweetRepository.getTweetsWithFollower(followsId);
+    const allTweetswithFollower:Tweet[] = await TweetRepository.getTweetsWithFollower(followsId);
     return { status: 200, value: allTweetswithFollower };
 };
 export const getTweet = async (req: AuthRequest): Promise<GetTweet> => {
@@ -29,7 +29,9 @@ export const getTweet = async (req: AuthRequest): Promise<GetTweet> => {
     const tweet: Tweet = await TweetRepository.getTweet(tweetId, null)
     return { status: 200, value: tweet }
 }
-export const addTweet = async (req: AuthRequest): Promise<GetTweet> => {
+
+
+export const addTweet = async (req: AuthRequest):  Promise<GetTweet>=> {
     const userId: ObjectId = req.tokenData.user_id;
     const text: String = req.body.text
 
@@ -40,7 +42,8 @@ export const addTweet = async (req: AuthRequest): Promise<GetTweet> => {
     await TweetRepository.addTweet(tweet)
     return { status: 200, value: tweet }
 }
-export const addComment = async (req: AuthRequest): Promise<GetTweet> => {
+
+export const addComment = async (req: AuthRequest):  Promise<GetTweet>=> {
     const userId: ObjectId = req.tokenData.user_id;
     const tweetId: ObjectId = req.body.tweetId
     const tweet: Tweet = {
@@ -51,8 +54,8 @@ export const addComment = async (req: AuthRequest): Promise<GetTweet> => {
     await TweetRepository.addCommentIdToTweet(tweetId, commentId)
     return { status: 200, value: 'success' }
 }
-export const addlike = async (tweetId: ObjectId, likeId: ObjectId): Promise<UpdateUser> => {
 
+export const addlike = async (tweetId :ObjectId, likeId :ObjectId):Promise<UpdateUser>  => {
     // const tweetId :ObjectId= req.tokenData.user_id;
     // const likeId :ObjectId=req.body.;
 
@@ -62,13 +65,16 @@ export const addlike = async (tweetId: ObjectId, likeId: ObjectId): Promise<Upda
     //     return { status: 401, value: 'user to follow not found' }
 
     // const response:UpdateWriteOpResult =
+
     await TweetRepository.addLike(tweetId, likeId)
+
     // if (!response || response.matchedCount == 0)
     //     return { status: 401, value: 'user not found' }
     // if (response.modifiedCount == 0)
     //     return { status: 401, value: 'you already follow this user' }
     return { status: 200, value: 'success' }
 }
+
 
 export const removeLike = async (tweetId: ObjectId, likeId: ObjectId): Promise<UpdateUser> => {
     await TweetRepository.removeLike(tweetId, likeId)

@@ -22,9 +22,11 @@ export const addFollower = async (userId: ObjectId, userToFollowId: ObjectId):Pr
 export const removeFollower = async (userId: ObjectId, userToFollowId: ObjectId):Promise<UpdateWriteOpResult>  => {
     return await UserModel.updateOne({ _id: userId, follows: { $in: [userToFollowId] } }, { $pull: { follows: userToFollowId } })
 }
+
 export const getFollower= async (userId: ObjectId, userToFollowId: ObjectId):Promise<User>  => {
     return await UserModel.findOne({ _id: userId, follows: { $in: [userToFollowId] } })
 }
+
 export const changeToManager = async (userId: ObjectId) => {
     return await UserModel.findOneAndUpdate({ _id: userId }, { role: "admin" })
 }
