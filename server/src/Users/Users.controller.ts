@@ -34,12 +34,14 @@ export const removeFollower = async (req:AuthRequest, res: Response):Promise<voi
     })
     res.status(respose.status).json(respose.value)
 }
+
 export const getFollower = async (req:AuthRequest, res: Response):Promise<void> => {
     const respose:GetUserDetails = await userManager.getFollower(req).catch((err: Error) => {
         return { status: 500, value: err.message }
     })
     res.status(respose.status).json(respose.value)
 }
+
 export const changeToManager = async (req:AuthRequest, res: Response):Promise<void> => {
     const respose:UpdateUser = await userManager.changeToManager(req).catch((err: Error) => {
         return { status: 500, value: err.message }

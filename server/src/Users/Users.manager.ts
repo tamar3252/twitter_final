@@ -44,7 +44,6 @@ export const addFollower = async (req: AuthRequest):Promise<UpdateUser>  => {
 
     const userId :ObjectId= req.tokenData.user_id;
     const userToFollowId :ObjectId=req.params.follow_id
-
     const userToFollow = await userRepository.findUserById(userToFollowId)
     if (!userToFollow)
         return { status: 401, value: 'user to follow not found' }
@@ -69,12 +68,14 @@ export const removeFollower = async (req: AuthRequest):Promise<UpdateUser> => {
         return { status: 401, value: 'you dont follow this user' }
     return { status: 200, value: 'success' }
 }
+
 export const getFollower = async (req: AuthRequest):Promise<GetUserDetails> => {
     const userId :ObjectId= req.tokenData.user_id;
     const userToFollowId:ObjectId = req.params.follow_id;
     const user:User = await userRepository.getFollower(userId, userToFollowId)
     return { status: 200, value: user }
 }
+
 export const changeToManager = async (req: AuthRequest) :Promise<UpdateUser>=> {
     const userId:ObjectId = req.tokenData.user_id;
     const response:User = await userRepository.changeToManager(userId)
