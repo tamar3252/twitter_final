@@ -35,7 +35,6 @@ const Like: FC<LikeCopmProps> = ({ tweet }) => {
         }
 
         const remove = async (): Promise<void> => {
-            console.log(likeId, tweetId);
             likeId && await removeLike(tweetId, likeId)
                 .catch((err: Error) =>
                     toast.error(err.message))

@@ -43,7 +43,7 @@ export const getUserDetails = async (req: AuthRequest): Promise<GetUserDetails> 
 export const addFollower = async (req: AuthRequest):Promise<UpdateUser>  => {
 
     const userId :ObjectId= req.tokenData.user_id;
-    const userToFollowId :ObjectId=new ObjectId(req.params.follow_id);
+    const userToFollowId :ObjectId=req.params.follow_id
 
     const userToFollow = await userRepository.findUserById(userToFollowId)
     if (!userToFollow)
@@ -68,6 +68,12 @@ export const removeFollower = async (req: AuthRequest):Promise<UpdateUser> => {
     if (response.modifiedCount == 0)
         return { status: 401, value: 'you dont follow this user' }
     return { status: 200, value: 'success' }
+}
+export const getFollower = async (req: AuthRequest):Promise<GetUserDetails> => {
+    const userId :ObjectId= req.tokenData.user_id;
+    const userToFollowId:ObjectId = req.params.follow_id;
+    const user:User = await userRepository.getFollower(userId, userToFollowId)
+    return { status: 200, value: user }
 }
 export const changeToManager = async (req: AuthRequest) :Promise<UpdateUser>=> {
     const userId:ObjectId = req.tokenData.user_id;
