@@ -1,5 +1,5 @@
 import {Tweet} from '../../../../Types/Tweet'
 
-export interface TweetCopmProps {
+export interface TweetInListProps {
   tweet: Tweet;
   }

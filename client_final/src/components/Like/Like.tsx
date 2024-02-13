@@ -18,54 +18,27 @@ const Like: FC<LikeCopmProps> = ({ tweet }) => {
         checkIsLikedFunc();
     }, [])
 
-
     const checkIsLikedFunc = async () => {
         const like: likeType = await checkIsLiked(tweet._id!)
         like ? (setLiked(true), setLikeId(like._id)) : setLiked(false)
     }
 
-    // const likeClick = async (tweetId: ObjectId): Promise<void> => {
-    //     setLikesNum(liked ? likesNum - 1 : tweet.likes ? likesNum + 1 : 1)
-    //     setLiked((prevLiked) => !prevLiked);
+    const add = async (tweetId: ObjectId): Promise<void> => {
+        const id: ObjectId | string | number = await addLike(tweetId).catch((err: Error) => toast.error(err.message))
+        setLikeId(id as ObjectId)
+    };
 
-    //     const add = async (): Promise<void> => {
-    //         await addLike(tweetId).then((id: ObjectId) => setLikeId(id))
-    //             .catch((err: Error) =>
-    //                 toast.error(err.message))
-    //     }
-
-    //     const remove = async (): Promise<void> => {
-    //         likeId && await removeLike(tweetId, likeId)
-    //             .catch((err: Error) =>
-    //                 toast.error(err.message))
-    //     }
-
-    //     !liked ? add() : remove()
-    // }
-
-
+    const remove = async (tweetId: ObjectId): Promise<void> => {
+        likeId && await removeLike(tweetId, likeId).catch((err: Error) => toast.error(err.message))
+    };
 
     const likeClick = async (tweetId: ObjectId): Promise<void> => {
-        if (liked) {
-            setLikesNum(likesNum - 1);
-        } else {
-            setLikesNum(tweet.likes ? likesNum + 1 : 1);
-        }
+        liked ? setLikesNum(likesNum - 1) : setLikesNum(tweet.likes ? likesNum + 1 : 1);
+
         setLiked((prevLiked) => !prevLiked);
-
-        const add = async (): Promise<void> => {
-            const id: ObjectId  = await addLike(tweetId).catch((err: Error) => toast.error(err.message))
-            setLikeId(id) 
-
-        };
-
-        const remove = async (): Promise<void> => {
-            likeId && await removeLike(tweetId, likeId).catch((err: Error) => toast.error(err.message))
-
-        };
-
-        !liked ? add() : remove();
+        !liked ? add(tweetId) : remove(tweetId);
     };
+
 
     return (
         <div>

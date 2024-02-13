@@ -13,23 +13,21 @@ const Home = () => {
     return (
         <div>
             {/* <UserDetails></UserDetails> */}
-            <Button onClick={() => setDisplayCommentBox(true)}>new tweet</Button>
+            <Button sx={{ borderRadius: '10px',marginTop:"10px" }} variant="contained" onClick={() => setDisplayCommentBox(true)}>new tweet</Button>
             <Dialog
                 onClose={() => setDisplayCommentBox(false)}
                 aria-labelledby="simple-dialog-title"
                 open={displayCommentBox}
                 scroll="paper">
 
-                <Box alignItems="center" border={1} borderRadius={2} sx={{ display: displayCommentBox ? 'block' : 'none' }}>
+                <Box alignItems="center" border={1} padding='30px' borderRadius={2} sx={{ display: displayCommentBox ? 'block' : 'none' }}>
                     <form
                         onSubmit={(event) => {
                             event.preventDefault();
-
-                            //add tweet
                              addTweet(tweetText).catch((err:Error)=>toast.error(err.message))
                         }}>
 
-                        <Textarea onChange={(event) => setTweetText(event.target.value)} placeholder="whrite comment" required sx={{ mb: 1 }} />
+                        <Textarea onChange={(event) => setTweetText(event.target.value)} placeholder="write your tweet" required sx={{ mb: 1,paddingX:'50px',paddingY:'30px',border: 'none',backgroundColor:'white',boxShadow: 'none' }} />
                         <Button onClick={() => setDisplayCommentBox(false)} type="submit">post</Button>
                     </form>
 

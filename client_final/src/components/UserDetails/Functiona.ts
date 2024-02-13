@@ -14,6 +14,7 @@ export const getUserDetails = async ():Promise<User> => {
        return await response.json();
 }
 
+
 export const useUserDetailsQuery = () => {
     return useQuery<User>('UserDetails', getUserDetails);
 };
@@ -47,6 +48,18 @@ export const removeFollow=async(userToFollowId:ObjectId):Promise<User>=>{
             'Content-Type': 'application/json',
             'Authorization': `${Cookies.get('token')}`
         }
+    });
+   return await response.json();
+}
+
+
+export const getAllFollows = async (userId:ObjectId):Promise<User[]> => {
+    const response:Response = await fetch(`http://localhost:3000/user/get_all_followers/${userId}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `${Cookies.get('token')}`
+        },
     });
    return await response.json();
 }

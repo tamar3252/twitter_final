@@ -1,6 +1,5 @@
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import { Box, Button, Dialog, Input, SxProps, Typography } from '@mui/material'
-import { ObjectId } from 'mongoose'
+import { Box, Button, Dialog } from '@mui/material'
 import React, { FC, useState } from 'react'
 import { CommentCopmProps } from './Types'
 import Textarea from '@mui/joy/Textarea';
@@ -17,7 +16,6 @@ const Comment: FC<CommentCopmProps> = ({ tweet }) => {
         setDisplayCommentBox(true)
     }
 
-
     return (
         <div>
             <Button onClick={() => addCommentClick()}>
@@ -25,30 +23,24 @@ const Comment: FC<CommentCopmProps> = ({ tweet }) => {
                 {commentsNum}
             </Button>
 
-
             <Dialog
                 onClose={() => setDisplayCommentBox(false)}
                 aria-labelledby="simple-dialog-title"
                 open={displayCommentBox}
-                scroll="paper"
+                scroll="paper">
 
-            >
-                <Box alignItems="center" border={1} borderRadius={2} sx={{ display: displayCommentBox ? 'block' : 'none' }}>
+                <Box alignItems="center" padding='30px' border={1} borderRadius={2} sx={{ display: displayCommentBox ? 'block' : 'none' }}>
                     <form
                         onSubmit={(event) => {
                             event.preventDefault();
                             addComment(tweet._id!, commentText).catch((err:Error)=>toast.error(err.message))
                             setCommentsNum((prev) => prev + 1);
                         }}>
-
-                        <Textarea onChange={(event) => setCommentText(event.target.value)} placeholder="whrite comment" required sx={{ mb: 1 }} />
+                        <Textarea onChange={(event) => setCommentText(event.target.value)} placeholder="write comment" required sx={{ mb: 1,paddingX:'50px',paddingY:'30px',border: 'none',backgroundColor:'white',boxShadow: 'none' }} />
                         <Button onClick={() => setDisplayCommentBox(false)} type="submit">reply</Button>
                     </form>
-
                 </Box>
             </Dialog>
-
-
         </div>
     )
 }

@@ -5,6 +5,7 @@ import { Login } from './components/Login/Login';
 import { Signup } from './components/SignUp/Signup';
 import { Home } from './components/Home/Home';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { TweetComp } from './components/Tweet/Tweet';
 
 function App() {
   const queryClient: QueryClient = new QueryClient();
@@ -16,6 +17,7 @@ function App() {
           <Route index element={<Login />} />
           <Route path="signup" element={<Signup />} />
           <Route path='home' element={<Home />} />
+          <Route path='tweet' element={<TweetComp/>} />
 
         </Routes>
       </BrowserRouter>

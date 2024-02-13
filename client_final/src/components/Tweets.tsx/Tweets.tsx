@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useState } from 'react'
 import { sortByNew, sortByPopular, getAllFollowsTweets, getAllTweets } from './Functions'
 import { Tweet } from '../../../../Types/Tweet'
-import { TweetCopm } from '../Tweet/Tweet'
+import { TweetInList } from '../TweetInList/TweetInList'
 import { QueryClient, useMutation } from 'react-query'
 import { FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material'
 import { ToastContainer, toast } from 'react-toastify'
@@ -42,19 +42,18 @@ const Tweets = () => {
       },
     }
   );
-  
+
 
   const sortTweets = (e: SelectChangeEvent<HTMLSelectElement>): void => {
     mutation.mutate(String(e.target.value))
   };
 
   return (
-    <div>
+    <div >
       <ToastContainer />
       <Typography variant="h3" align="center" gutterBottom>
-        tweets
-      </Typography>
 
+      </Typography>
       <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
         <InputLabel id="demo-simple-select-standard-label">sort by</InputLabel>
         <Select onChange={sortTweets} label="sort by">
@@ -66,26 +65,29 @@ const Tweets = () => {
         </Select>
       </FormControl>
 
-      <Grid container rowSpacing={1} columnSpacing={1}>
+      <Grid margin='20px' container justifyContent="center" alignItems="center" >
         {isLoadingAllTweets ?
           toast.info('Loading tweets...') :
           listIndex == 0 && allTweets && allTweets.map(element => (
-            <Grid item xs={6}>
+            <Grid item xs={10}>
               <div key={String(element._id)}>
-                <TweetCopm tweet={element} />
+                <TweetInList tweet={element} />
               </div>
             </Grid>
           ))}
       </Grid>
 
-      {isLoadingAllFollowsTweets ?
-        toast.info('Loading tweets...') :
-        listIndex == 1 && allFollowsTweets && allFollowsTweets.map(element => (
-          <div key={String(element._id)}>
-            <TweetCopm tweet={element} />
-          </div>
-        ))}
-
+      <Grid margin='20px' container justifyContent="center" alignItems="center" >
+        {isLoadingAllFollowsTweets ?
+          toast.info('Loading tweets...') :
+          listIndex == 1 && allFollowsTweets && allFollowsTweets.map(element => (
+            <Grid item xs={10}>
+              <div key={String(element._id)}>
+                <TweetInList tweet={element} />
+              </div>
+            </Grid>
+          ))}
+      </Grid>
     </div>
   )
 }

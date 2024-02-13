@@ -7,7 +7,6 @@ import { UpdateUser, User } from "../../../Types/User";
 
 const ObjectId = require('mongoose').ObjectID;
 
-
 export const getAllTweets = async (req: AuthRequest): Promise<GetTweets> => {
     const userId: ObjectId = req.tokenData?.user_id
     const allTweets: Tweet[] = await TweetRepository.getAllTweets(userId)

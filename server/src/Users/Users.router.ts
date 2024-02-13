@@ -12,6 +12,8 @@ routerUser.patch("/add_follower/:follow_id",userValidation.followerIdValidation,
 routerUser.patch("/remove_follower/:follow_id",userValidation.followerIdValidation,authUser,userController.removeFollower)
 routerUser.get("/get_follower/:follow_id",userValidation.followerIdValidation,authUser,userController.getFollower)
 
+routerUser.get("/get_all_followers/:user_id",authUser,userController.getAllFollowers)
+
 routerUser.patch("/change_to_manager",authUser,userController.changeToManager)
 
 module.exports = routerUser;

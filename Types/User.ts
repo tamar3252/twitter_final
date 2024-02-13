@@ -22,3 +22,4 @@ export type UserSignup = { status: number; value: User | string | { token: strin
 export type UserLogin = { status: number; value: User | string | { token: string, user: User } }
 export type GetUserDetails = { status: number; value: User | string }
 export type UpdateUser = { status: number; value: string }
+export type GetUsers = { status: number; value: User[] | string }

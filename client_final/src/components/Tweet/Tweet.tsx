@@ -1,51 +1,42 @@
-import React, { FC, useState } from 'react'
-import { Tweet } from '../../../../Types/Tweet'
-import { TweetCopmProps } from './Types'
-import { Box,  Grid,  Typography } from '@mui/material'
-import { getComment } from './Functions'
-import Like from '../Like';
-import Comment from '../Comment';
-import { User } from '../../../../Types/User'
-import UserDetails from '../UserDetails'
-import { toast } from 'react-toastify'
+import React, { FC, useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { Tweet } from '../../../../Types/Tweet';
+import { TweetInList } from '../TweetInList/TweetInList';
+import { ObjectId } from 'mongoose';
+import { toast } from 'react-toastify';
+import { getComment } from './Functions';
+import { Grid } from '@mui/material';
 
-const TweetCopm: FC<TweetCopmProps> = ({ tweet }) => {
+const TweetComp: FC = () => {
+    const location = useLocation();
+    const [comments, setComments] = useState<Tweet[]>([]);
+    const [tweet, setTweet] = useState<Tweet>()
 
-    const [comments, setComments] = useState<Tweet[]>([])
+    useEffect(() => {
+        const tweet = location.state.tweet;
+        setTweet(tweet)
+        tweet.comments?.forEach(async (commentId: ObjectId) => {
+            const comment: string | number | Tweet = await getComment(commentId).catch((err: Error) => toast.error(err.message));
+            setComments((prevComments) => [...prevComments, comment as Tweet]);
+        });
+    }, []);
 
     return (
-
-        <div >
-            <Box >
-                <Grid border={1} margin={2} padding={2} borderRadius={5} boxShadow={2} style={{ position: 'relative' }}>
-
-                    <UserDetails user={tweet.user_id as unknown as User}></UserDetails>
-
-                    <div onClick={() => {
-                        tweet.comments?.forEach(async commentId => {
-                            const comment: string | number | Tweet = await getComment(commentId).catch((err: Error) => toast.error(err.message))
-                            comments ? setComments((prevComments) => [...prevComments, comment as Tweet]) : setComments([comment as Tweet])
-                        })
-                    }
-                    }>
-                        <Typography fontSize={20}>{tweet.text}</Typography>
-                    </div>
-
-
-                    <Grid container spacing={1} alignItems="center" marginTop={3} justifyContent="space-around">
-                        <Like tweet={tweet}></Like>
-                        <Comment tweet={tweet}></Comment>
-                    </Grid>
-
-                    {comments?.map(element => (
+        <div>
+            {tweet&&<TweetInList tweet={tweet}/>}
+            <Grid margin='20px' container justifyContent="center" alignItems="center" >
+                {comments?.map((element) => (
+                    <Grid item xs={10}>
                         <div key={String(element._id)}>
-                            <TweetCopm tweet={element} />
+                            <TweetInList tweet={element} />
                         </div>
-                    ))}
-                </Grid>
-            </Box>
+                    </Grid>
+                ))}
+            </Grid>
         </div>
-    )
-}
 
-export { TweetCopm }
+    );
+
+};
+
+export { TweetComp };
