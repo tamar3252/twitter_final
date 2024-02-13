@@ -3,7 +3,7 @@ import { Box, Button, Dialog } from '@mui/material'
 import React, { FC, useState } from 'react'
 import { CommentCopmProps } from './Types'
 import Textarea from '@mui/joy/Textarea';
-import { addComment } from './Functions';
+import { addComment, addCommentClick } from './Functions';
 import { toast } from 'react-toastify';
 
 
@@ -12,13 +12,10 @@ const Comment: FC<CommentCopmProps> = ({ tweet }) => {
     const [commentText, setCommentText] = useState<string>("")
     const [commentsNum, setCommentsNum] = useState(tweet.comments?.length || 0)
 
-    const addCommentClick = async () => {
-        setDisplayCommentBox(true)
-    }
 
     return (
         <div>
-            <Button onClick={() => addCommentClick()}>
+            <Button onClick={() => addCommentClick(setDisplayCommentBox)}>
                 {<ChatBubbleOutlineIcon color="primary" />}
                 {commentsNum}
             </Button>
