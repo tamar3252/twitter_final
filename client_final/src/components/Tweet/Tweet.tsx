@@ -6,6 +6,7 @@ import { ObjectId } from 'mongoose';
 import { toast } from 'react-toastify';
 import { getComment } from './Functions';
 import { Grid } from '@mui/material';
+import { TweetProps } from './Types';
 
 const TweetComp: FC = () => {
     const location = useLocation();
@@ -13,7 +14,7 @@ const TweetComp: FC = () => {
     const [tweet, setTweet] = useState<Tweet>()
 
     useEffect(() => {
-        const tweet = location.state.tweet;
+        const tweet:Tweet = location.state.tweet;
         setTweet(tweet)
         tweet.comments?.forEach(async (commentId: ObjectId) => {
             const comment: string | number | Tweet = await getComment(commentId).catch((err: Error) => toast.error(err.message));

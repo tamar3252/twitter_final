@@ -1,8 +1,5 @@
-// MyContext.ts
-import { createContext, Dispatch, SetStateAction } from 'react';
+import { createContext } from 'react';
 import { ObjectId } from 'mongoose';
-
-
 
 interface LikeContextType {
     liked:boolean;

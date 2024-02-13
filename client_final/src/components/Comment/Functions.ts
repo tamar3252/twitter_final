@@ -14,7 +14,3 @@ export const addComment = async (tweetId: ObjectId, text: string): Promise<Tweet
     return await response.json();
 }
 
-
-export const addCommentClick = (setDisplayCommentBox: React.Dispatch<React.SetStateAction<boolean>>): void => {
-    setDisplayCommentBox(true)
-}

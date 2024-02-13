@@ -59,12 +59,11 @@ export const likeClick = async (tweetId: ObjectId, tweet: Tweet,liked:boolean, s
     //     const { liked, setLiked, likeId, setLikeId, likesNum, setLikesNum } = context;
         liked ? setLikesNum(likesNum - 1) : setLikesNum(tweet.likes ? likesNum + 1 : 1);
         setLiked((prevLiked) => !prevLiked);
-        !liked ? add(tweetId, setLikeId) : remove(tweetId, likeId); 
+        !liked ?await add(tweetId, setLikeId) :await remove(tweetId, likeId); 
     // }
 }
 
-
-export const checkIsLiked = async (tweet:Tweet,setLiked:React.Dispatch<React.SetStateAction<boolean>>,setLikeId:React.Dispatch<React.SetStateAction<ObjectId | null>>) => {
+export const checkIsLiked = async (tweet:Tweet,setLiked:React.Dispatch<React.SetStateAction<boolean>>,setLikeId:React.Dispatch<React.SetStateAction<ObjectId | null>>) :Promise<void>=> {
     const like: likeType = await getLike(tweet._id!)
     like ? (setLiked(true), setLikeId(like._id!)) : setLiked(false)
 }

@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from 'react'
-import { addFollow, checkIsFollow, getAllFollows, removeFollow, useUserDetailsQuery } from './Functiona';
+import { addFollow, checkIsFollow, checkIsFollowFunc, getAllFollows, getAllFollowsFunc, removeFollow, useUserDetailsQuery } from './Functiona';
 import { Avatar, Box, Button, Grid, Typography } from '@mui/material';
 import { UserCopmProps } from './Types';
 import { User } from '../../../../Types/User';
@@ -9,23 +9,13 @@ const UserDetails: FC<UserCopmProps> = ({ user }) => {
     const { data: userDetails } = useUserDetailsQuery();
 
     const [displayUserBox, setDisplayUserBox] = useState(false)
-    const [isFollow, setIsFollow] = useState<boolean>()
-    const [followsNum, setFollowsNum] = useState<number>()
+    const [isFollow, setIsFollow] = useState<boolean|null>(null)
+    const [followsNum, setFollowsNum] = useState<number|null>(null)
 
-
-    const checkIsFollowFunc = async () => {
-        const res: User | string | number = await checkIsFollow(user._id!).catch((err: Error) => toast.error(err.message))
-        res ? setIsFollow(true) : setIsFollow(false)
-    }
-
-    const getAllFollowsFunc = async () => {
-        const follows = await getAllFollows(user._id!)
-        setFollowsNum(follows.length)
-    }
 
     useEffect(() => {
-        checkIsFollowFunc()
-        getAllFollowsFunc()
+        checkIsFollowFunc(user,setIsFollow)
+        getAllFollowsFunc(user,setFollowsNum)
     }, [])
 
 

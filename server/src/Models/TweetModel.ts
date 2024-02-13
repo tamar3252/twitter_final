@@ -7,7 +7,8 @@ const TweetSchema =new Schema<TweetDocument>({
   text: String,
   user_id: { type: Schema.Types.ObjectId, ref: "users" },
   comments: [{ type: Schema.Types.ObjectId, ref: "tweets" }],
-  likes: [{ type: Schema.Types.ObjectId, ref: "likes" }]
+  likes: [{ type: Schema.Types.ObjectId, ref: "likes" }],
+  dateCreated: { type: Date, default: Date.now }
 })
 
 

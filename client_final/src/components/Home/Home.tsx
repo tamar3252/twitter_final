@@ -7,7 +7,7 @@ import { toast } from 'react-toastify'
 
 const Home = () => {    
 
-    const [displayCommentBox, setDisplayCommentBox] = useState(false)
+    const [displayCommentBox, setDisplayCommentBox] = useState<boolean>(false)
     const [tweetText, setTweetText] = useState<string>("")
 
     return (
@@ -30,7 +30,6 @@ const Home = () => {
                         <Textarea onChange={(event) => setTweetText(event.target.value)} placeholder="write your tweet" required sx={{ mb: 1,paddingX:'50px',paddingY:'30px',border: 'none',backgroundColor:'white',boxShadow: 'none' }} />
                         <Button onClick={() => setDisplayCommentBox(false)} type="submit">post</Button>
                     </form>
-
                 </Box>
             </Dialog>
             <Tweets></Tweets>

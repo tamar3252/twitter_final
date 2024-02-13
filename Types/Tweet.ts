@@ -6,7 +6,8 @@ export type Tweet = {
   text: String,
   user_id: ObjectId,
   comments?: ObjectId[] ,
-  likes?: ObjectId[]
+  likes?: ObjectId[],
+  dateCreated?:Date
 };
 
 

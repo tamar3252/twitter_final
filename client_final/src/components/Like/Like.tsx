@@ -6,6 +6,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { LikeCopmProps } from './Types'
 import { checkIsLiked, likeClick } from './Functions'
 import { likeContext } from '../Context'
+import { toast } from 'react-toastify';
 
 const Like: FC<LikeCopmProps> = ({ tweet }) => {
 
@@ -14,13 +15,13 @@ const Like: FC<LikeCopmProps> = ({ tweet }) => {
     const [likesNum, setLikesNum] = useState<number>(tweet.likes ? tweet.likes?.length : 0)
 
     useEffect(() => {
-        checkIsLiked(tweet,setLiked,setLikeId)
+        checkIsLiked(tweet,setLiked,setLikeId).catch((err:Error)=>toast.error(err.message))
     }, [])
 
     return (
         <likeContext.Provider value={{ liked, setLiked, likeId, setLikeId, likesNum, setLikesNum }}>
             <div>
-                <Button onClick={() => likeClick(tweet._id!,tweet,liked, setLiked, likeId, setLikeId, likesNum, setLikesNum )}>
+                <Button onClick={() => likeClick(tweet._id!,tweet,liked, setLiked, likeId, setLikeId, likesNum, setLikesNum ).catch((err:Error)=>toast.error(err.message))}>
                     {liked ? <FavoriteIcon color="primary" /> : <FavoriteBorderIcon />}
                     {likesNum}
                 </Button>

@@ -1,5 +1,5 @@
-import React, { FC, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { FC } from 'react';
+import { Link, NavigateFunction } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { FormInputs } from './Types';
 import { Box, Grid, Typography, TextField, FormControl, Button } from '@mui/material';
@@ -10,7 +10,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Login: FC = () => {
-  const navigate = useNavigate();
+  const navigate:NavigateFunction = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm<FormInputs>();
 
   const onSubmit = async (data: FormInputs) => {
@@ -21,7 +21,6 @@ const Login: FC = () => {
   return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
       <ToastContainer />
-
 
       <Box minHeight="100vh" maxWidth="70vh" display="flex" alignItems="center" justifyContent="center">
         <Grid container spacing={3}>

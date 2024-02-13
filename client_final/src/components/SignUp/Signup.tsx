@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavigateFunction } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { User } from '../../../../Types/User';
 import { Box, Grid, Typography, TextField, FormControl, Button } from '@mui/material';
@@ -9,7 +9,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { toast } from 'react-toastify';
 
 const Signup: FC = () => {
-  const navigate = useNavigate();
+  const navigate:NavigateFunction = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm<User>();
 
   const onSubmit = async (data: User) => {
