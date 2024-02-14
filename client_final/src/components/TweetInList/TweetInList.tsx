@@ -14,9 +14,9 @@ const TweetInList: FC<TweetInListProps> = ({ tweet }) => {
         <div >
             <Box >
                 <Grid  padding={2} boxShadow={2} style={{ position: 'relative' }}>
-                    <UserDetails user={tweet.user_id as unknown as User}></UserDetails>
+                    <UserDetails user={tweet.user_id as unknown as User} isConnectedUser={false}></UserDetails>
                     <div >
-                        <Typography onClick={()=>nav('/tweet',{ state: {  tweet } })} fontSize={20}>{tweet.text}</Typography>
+                        <Typography onClick={()=>nav(`/tweet/${tweet._id}`,{ state: { tweet } })} fontSize={20}>{tweet.text}</Typography>
                         {tweet.dateCreated && new Date(tweet.dateCreated).toLocaleDateString()} {tweet.dateCreated &&new Date(tweet.dateCreated).toLocaleTimeString()}              
                               </div>
                     <Grid container  spacing={1} alignItems="center" marginTop={3} justifyContent="space-around">

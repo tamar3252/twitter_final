@@ -2,13 +2,15 @@ import Cookies from "js-cookie";
 import { Tweet } from '../../../../Types/Tweet'
 import { useQuery } from "react-query";
 import { allTweetsQuery } from "./Types";
+import {config} from '../../Config'
+
 
 
 export const getAllTweets = (): allTweetsQuery => {
     const useAllTweetsQuery = (): allTweetsQuery => {
         return useQuery<Tweet[]>('allTweets',
             async (): Promise<Tweet[]> => {
-                const response: Response = await fetch('http://localhost:3000/tweet/all_tweets', {
+                const response: Response = await fetch(`${process.env.REACT_APP_SERVER_URL}/tweet/all_tweets`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -26,7 +28,7 @@ export const getAllFollowsTweets = (): allTweetsQuery => {
     const useAllFollowsTweetsQuery = (): allTweetsQuery => {
         return useQuery<Tweet[], Error>('allFollowsTweets',
             async (): Promise<Tweet[]> => {
-                const response = await fetch('http://localhost:3000/tweet/tweets_with_follower', {
+                const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/tweet/tweets_with_follower`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

@@ -17,7 +17,7 @@ function App() {
           <Route index element={<Login />} />
           <Route path="signup" element={<Signup />} />
           <Route path='home' element={<Home />} />
-          <Route path='tweet' element={<TweetComp/>} />
+          <Route path='tweet/:tweet_id' element={<TweetComp/>} />
 
         </Routes>
       </BrowserRouter>

@@ -9,11 +9,11 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const Login: FC = () => {
+const Login: FC<{}> = ({}) => {
   const navigate:NavigateFunction = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm<FormInputs>();
 
-  const onSubmit = async (data: FormInputs) => {
+  const loginSubmit = async (data: FormInputs) => {
     await login(data, navigate).catch((err: Error) =>
       toast.error(err.message));
   }
@@ -30,7 +30,7 @@ const Login: FC = () => {
             </Typography>
           </Grid>
           <Grid item xs={12}>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleSubmit(loginSubmit)}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <FormControl fullWidth>

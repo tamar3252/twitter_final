@@ -2,9 +2,10 @@ import { NavigateFunction } from "react-router-dom";
 import { FormInputs } from "./Types";
 import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';
+import { config } from "../../Config";
 
 export const login = async (body: FormInputs, nav: NavigateFunction): Promise<void> => {
-  const response = await fetch('http://localhost:3000/user/login', {
+  const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/user/login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

@@ -33,8 +33,7 @@ export const removeLike = async (tweetId:ObjectId ,liketId: ObjectId): Promise<v
 }
 
 export const deleteTweet = async (tweetId: ObjectId, userId: ObjectId) => {
-    return await TweetModel.deleteOne({ _id: tweetId });
-
+    userId? await TweetModel.deleteOne({ _id: tweetId ,user_id:userId}):await TweetModel.deleteOne({ _id: tweetId });
     //     let tweetsComments;
 
     //     const user = await UserModel.findOne({ _id: userId });

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react'
+import React, { ChangeEvent, FC, useState } from 'react'
 import { sortByNew, sortByPopular, getAllFollowsTweets, getAllTweets } from './Functions'
 import { Tweet } from '../../../../Types/Tweet'
 import { TweetInList } from '../TweetInList/TweetInList'
@@ -6,7 +6,7 @@ import { QueryClient, useMutation } from 'react-query'
 import { FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material'
 import { ToastContainer, toast } from 'react-toastify'
 
-const Tweets = () => {
+const Tweets :FC<{}> = ({}) => {
   const queryClient: QueryClient = new QueryClient();
 
   const { data: allTweets, isLoading: isLoadingAllTweets, isError: isErrorAllTweets } = getAllTweets();

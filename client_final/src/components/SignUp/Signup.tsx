@@ -8,11 +8,11 @@ import { signup } from './Functions';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { toast } from 'react-toastify';
 
-const Signup: FC = () => {
+const Signup: FC<{}> = ({}) => {
   const navigate:NavigateFunction = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm<User>();
 
-  const onSubmit = async (data: User) => {
+  const signupSubmit = async (data: User) => {
      await signup(data, navigate).catch((err: Error) =>
      toast.error(err.message));
   }
@@ -27,7 +27,7 @@ const Signup: FC = () => {
             </Typography>
           </Grid>
           <Grid item xs={12}>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleSubmit(signupSubmit)}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <FormControl fullWidth>
