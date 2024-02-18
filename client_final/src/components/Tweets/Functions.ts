@@ -43,20 +43,10 @@ export const getAllFollowsTweets = (): allTweetsQuery => {
 
 export const sortByNew = (allTweets: Tweet[] ): Tweet[] => {
     return allTweets.sort((a, b) => String(b._id).localeCompare(String(a._id)));
-    // return allTweets.sort((a, b) => b._id.toHexString().localeCompare(a._id.toHexString()));
 }
 
 export const sortByPopular = (allTweets: Tweet[] ): Tweet[] => {
     return allTweets.sort((a: Tweet, b: Tweet) => b.likes!.length - a.likes!.length);
-    // if (!allTweets)
-    //     return null
-    // return allTweets!.sort((a: Tweet, b: Tweet) =>
-    //     b.likes!.length - a.likes!.length
-    // )
-    // !allTweets?return null:
-    // if (allTweets && allTweets?.length > 0)
-    //     return allTweets!.sort((a: Tweet, b: Tweet) =>
-    //         b.likes!.length - a.likes!.length
-    //     )
+
 }
 

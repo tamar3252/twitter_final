@@ -1,7 +1,10 @@
 import React, { FC, useEffect, useState } from 'react'
-import { addFollow, changeToManager, checkIsFollow, checkIsFollowFunc, getAllFollows, getAllFollowsFunc, removeFollow } from './Functiona';
+import { addFollow, changeToManager, checkIsFollow, getAllFollows, removeFollow } from './Functiona';
 import { Avatar, Box, Button, Grid, Typography } from '@mui/material';
 import { UserCopmProps } from './Types';
+import { useMutation } from 'react-query';
+import { toast } from 'react-toastify';
+import { User } from '../../../../Types/User';
 
 const UserDetails: FC<UserCopmProps> = ({ user, isConnectedUser }) => {
 
@@ -9,11 +12,56 @@ const UserDetails: FC<UserCopmProps> = ({ user, isConnectedUser }) => {
     const [isFollow, setIsFollow] = useState<boolean | null>(null)
     const [followsNum, setFollowsNum] = useState<number | null>(null)
 
+    const mutationCheckIsFollow = useMutation<void, unknown>({
+        mutationFn: () => checkIsFollow(user._id!),
+        onSuccess: async (data: User) => {
+            data ? setIsFollow(true) : setIsFollow(false)
+        },
+        onError: () => {
+            toast.error('Failed', { position: 'top-center' });
+        },
+    });
+    const mutationaddFollow = useMutation<void, unknown>({
+        mutationFn: () => addFollow(user._id!),
+        onSuccess: async () => {
+            setIsFollow(true)
+        },
+        onError: () => {
+            toast.error('Failed', { position: 'top-center' });
+        },
+    });
+    const mutationRemoveFollow = useMutation<void, unknown>({
+        mutationFn: () => removeFollow(user._id!),
+        onSuccess: async () => {
+            setIsFollow(false)
+        },
+        onError: () => {
+            toast.error('Failed', { position: 'top-center' });
+        },
+    });
+    const mutationChangeToManager = useMutation<void, unknown>({
+        mutationFn: () => changeToManager(),
+        onSuccess: async () => {
+            toast.success('sucess', { position: 'top-center' });
+        },
+        onError: () => {
+            toast.error('Failed', { position: 'top-center' });
+        },
+    });
+    const mutationGetAllFollow = useMutation<void, unknown>({
+        mutationFn: () => getAllFollows(user._id!),
+        onSuccess: async (data:User[]) => {
+            setFollowsNum(data.length)
+        },
+        onError: () => {
+            toast.error('Failed', { position: 'top-center' });
+        },
+    });
 
     useEffect(() => {
-        user&&(
-            checkIsFollowFunc(user, setIsFollow),
-            getAllFollowsFunc(user, setFollowsNum)
+        user && (
+            mutationCheckIsFollow.mutate(),
+            mutationGetAllFollow.mutate()
         )
     }, [])
 
@@ -26,14 +74,14 @@ const UserDetails: FC<UserCopmProps> = ({ user, isConnectedUser }) => {
                         style={{ position: 'relative' }}>
                         <Avatar onClick={() => displayUserBox ? setDisplayUserBox(false) : setDisplayUserBox(true)}
                             src={user?.image || ''}
-                            sx={{ width: 40, height: 40, borderRadius: '50%' }}/>
+                            sx={{ margin:2, width: 70, height: 70, borderRadius: '50%' }} />
 
                         {displayUserBox && (
                             <Box
                                 sx={{
                                     position: 'absolute',
                                     top: '50px',
-                                    left: '100px',
+                                    left: '90px',
                                     transform: 'translateX(-50%)',
                                     backgroundColor: 'white',
                                     boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.2)',
@@ -54,20 +102,20 @@ const UserDetails: FC<UserCopmProps> = ({ user, isConnectedUser }) => {
                                         </Grid>
                                     </Grid>
                                     <Typography variant="body1" sx={{ color: 'gray', marginBottom: '10px' }}>
-                                        {user.follows?user.follows?.length:0} following
+                                        {user.follows ? user.follows?.length : 0} following
                                     </Typography>
                                     <Typography variant="body1" sx={{ color: 'gray', marginBottom: '10px' }}>
                                         {followsNum} followers
                                     </Typography>
                                     {!isConnectedUser ?
-                                        <Button onClick={() => isFollow ? (removeFollow(user._id!), setIsFollow(false)) : (addFollow(user._id!), setIsFollow(true))}>
+                                        <Button onClick={() => isFollow ?mutationRemoveFollow.mutate() : mutationaddFollow.mutate()}>
                                             {isFollow ? 'Unfollow' : 'Follow'}
                                         </Button> :
                                         (user.role == 'admin' ?
                                             <Typography variant="body1" sx={{ color: 'gray', marginBottom: '10px' }}>
-                                                {user.role} 
+                                                {user.role}
                                             </Typography> :
-                                            <Button onClick={changeToManager}>become to manager</Button>
+                                            <Button onClick={()=>mutationChangeToManager.mutate()}>become to manager</Button>
                                         )
                                     }
                                 </div>

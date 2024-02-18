@@ -6,13 +6,19 @@ import { Signup } from './components/SignUp/Signup';
 import { Home } from './components/Home/Home';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { TweetComp } from './components/Tweet/Tweet';
+import UserDetails from './components/UserDetails';
+import { useUserDetailsQuery } from './components/Home/Functions';
+import { User } from '../../Types/User';
 
 function App() {
   const queryClient: QueryClient = new QueryClient();
+  // const { data  } = useUserDetailsQuery();
+  // const userDetails:User| undefined=data
 
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
+      {/* <UserDetails user={userDetails!} isConnectedUser={true}></UserDetails> */}
         <Routes>
           <Route index element={<Login />} />
           <Route path="signup" element={<Signup />} />

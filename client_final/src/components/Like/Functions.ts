@@ -1,10 +1,8 @@
 import Cookies from "js-cookie";
 import { ObjectId } from "mongoose";
 import { Like } from '../../../../Types/Like'
-import { toast } from "react-toastify";
 import { Tweet } from "../../../../Types/Tweet";
 import { Like as likeType } from '../../../../Types/Like';
-import {config} from '../../Config'
 
 
 
@@ -41,25 +39,6 @@ export const getLike = async (tweetId: ObjectId): Promise<Like> => {
         }
     })
     return await response.json();
-}
-
-const add = async (tweetId: ObjectId, setLikeId: React.Dispatch<React.SetStateAction<ObjectId|null>>): Promise<void> => {
-    const id: ObjectId | string | number = await addLike(tweetId).catch((err: Error) => toast.error(err.message))
-    setLikeId(id as ObjectId );
-};
-
-const remove = async (tweetId: ObjectId, likeId: ObjectId | null): Promise<void> => {
-    likeId && await removeLike(tweetId, likeId).catch((err: Error) => toast.error(err.message))
-};
-
-export const likeClick = async (tweetId: ObjectId, tweet: Tweet,liked:boolean, setLiked:React.Dispatch<React.SetStateAction<boolean>>, likeId:ObjectId|null, setLikeId:React.Dispatch<React.SetStateAction<ObjectId|null>>, likesNum:number, setLikesNum:React.Dispatch<React.SetStateAction<number>>): Promise<void> => {
-    // const context = useContext(likeContext)
-    // if (context) {
-    //     const { liked, setLiked, likeId, setLikeId, likesNum, setLikesNum } = context;
-        liked ? setLikesNum(likesNum - 1) : setLikesNum(tweet.likes ? likesNum + 1 : 1);
-        setLiked((prevLiked) => !prevLiked);
-        !liked ?await add(tweetId, setLikeId) :await remove(tweetId, likeId); 
-    // }
 }
 
 export const checkIsLiked = async (tweet:Tweet,setLiked:React.Dispatch<React.SetStateAction<boolean>>,setLikeId:React.Dispatch<React.SetStateAction<ObjectId | null>>) :Promise<void>=> {

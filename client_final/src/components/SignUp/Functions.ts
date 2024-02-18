@@ -1,11 +1,7 @@
-import { NavigateFunction } from "react-router-dom";
 import { User } from '../../../../Types/User'
-import Cookies from "js-cookie";
-import { toast } from "react-toastify";
-import {config} from '../../Config'
 
 
-export const signup = async (body: User, nav: NavigateFunction): Promise<void> => {
+export const signup = async (body: User): Promise<void> => {
   const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/user/signup`, {
     method: 'POST',
     headers: {
@@ -16,11 +12,6 @@ export const signup = async (body: User, nav: NavigateFunction): Promise<void> =
       email: body.email, password: body.password
     }),
   });
-  const data = await response.json();
+  return await response.json();
 
-  response.ok ? (
-    Cookies.set('token', data.token),
-    nav('/home')
-  ) :
-    ((toast.error(data)))
 }

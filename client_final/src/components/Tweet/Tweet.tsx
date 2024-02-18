@@ -7,20 +7,29 @@ import { toast } from 'react-toastify';
 import { getComment } from './Functions';
 import { Grid } from '@mui/material';
 import { map } from 'lodash';
+import { useMutation } from 'react-query';
 
 const TweetComp: FC<{}> = ({ }) => {
     const location = useLocation()
     const [comments, setComments] = useState<Tweet[]>([]);
     const [tweet, setTweet] = useState<Tweet>()
 
+    const mutationGetComment = useMutation<void, unknown, { tweetId: ObjectId }>({
+        mutationFn: ({ tweetId }) => getComment(tweetId),
+        onSuccess: async (comment) => {
+            setComments((prevComments) => [...prevComments, comment as Tweet])     
+        },
+        onError: () => {
+            toast.error('Failed to login', { position: 'top-right' });
+        },
+    });
+    
+
     useEffect(() => {
         const tweet: Tweet = location.state.tweet
         setTweet(tweet)
-        console.log('tweet',location.state.tweet);
-        
         tweet.comments?.forEach(async (commentId: ObjectId) => {
-            const comment: string | number | Tweet = await getComment(commentId).catch((err: Error) => toast.error(err.message))
-            setComments((prevComments) => [...prevComments, comment as Tweet])
+             await mutationGetComment.mutate({tweetId:commentId});
         })
     }, [])
 

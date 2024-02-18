@@ -1,20 +1,36 @@
 import React, { FC } from 'react';
 import { Link, NavigateFunction } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { User } from '../../../../Types/User';
+import { User, UserSignup } from '../../../../Types/User';
 import { Box, Grid, Typography, TextField, FormControl, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { signup } from './Functions';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { toast } from 'react-toastify';
+import { useMutation } from 'react-query';
+import Cookies from 'js-cookie';
 
 const Signup: FC<{}> = ({}) => {
   const navigate:NavigateFunction = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm<User>();
 
+  const mutationSignup = useMutation<void, unknown, { body: User }>({
+    mutationFn: ({ body }) => signup(body),
+    onSuccess: async (data: UserSignup) => {
+        if (data.token) {
+            Cookies.set('token', data.token);
+            navigate('/home')
+        } else {
+            toast.error(data , { position: 'top-right' });
+        }
+    },
+    onError: () => {
+        toast.error('Failed to login', { position: 'top-right' });
+    },
+});
+
   const signupSubmit = async (data: User) => {
-     await signup(data, navigate).catch((err: Error) =>
-     toast.error(err.message));
+     await mutationSignup.mutate({body:data})
   }
 
   return (

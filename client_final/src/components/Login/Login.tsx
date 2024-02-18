@@ -8,14 +8,30 @@ import { login } from './Functions';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useMutation } from 'react-query';
+import Cookies from 'js-cookie';
 
-const Login: FC<{}> = ({}) => {
-  const navigate:NavigateFunction = useNavigate();
+const Login: FC<{}> = ({ }) => {
+  const navigate: NavigateFunction = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm<FormInputs>();
 
-  const loginSubmit = async (data: FormInputs) => {
-    await login(data, navigate).catch((err: Error) =>
-      toast.error(err.message));
+  const mutationLogin = useMutation<void, unknown, { body: FormInputs }>({
+    mutationFn: ({ body }) => login(body),
+    onSuccess: async (data: { token: string }) => {
+      if (data.token) {
+        Cookies.set('token', data.token);
+        navigate('/home');
+      } else {
+        toast.error(data, { position: 'top-center' });
+      }
+    },
+    onError: () => {
+      toast.error('Failed to login', { position: 'top-center' });
+    },
+  })
+
+  const loginSubmit = async (data: FormInputs):Promise<void> => {
+    await mutationLogin.mutate({ body: data })
   }
 
   return (
@@ -63,8 +79,6 @@ const Login: FC<{}> = ({}) => {
                     Sign In
                   </Button>
                 </Grid>
-                {/* <Link to=""></Link> */}
-
                 <Grid item xs={12}>
                   <Typography align="center">
                     already jave account?
