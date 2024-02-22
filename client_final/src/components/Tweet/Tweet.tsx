@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { Tweet } from '../../../../Types/Tweet';
 import { TweetInList } from '../TweetInList/TweetInList';
 import { ObjectId } from 'mongoose';
@@ -17,21 +17,27 @@ const TweetComp: FC<{}> = ({ }) => {
     const mutationGetComment = useMutation<void, unknown, { tweetId: ObjectId }>({
         mutationFn: ({ tweetId }) => getComment(tweetId),
         onSuccess: async (comment) => {
-            setComments((prevComments) => [...prevComments, comment as Tweet])     
+            await setComments((prevComments) => [...prevComments, comment as Tweet])     
         },
         onError: () => {
             toast.error('Failed to login', { position: 'top-right' });
         },
     });
-    
+    const { tweet_id  } = useParams<{ tweet_id: string  }>();
 
+    
+const getComments=async()=>{
+    const tweet2 =await getComment(tweet_id as unknown as ObjectId)
+    await setTweet(tweet2)    
+    await tweet2&&tweet2.comments?.forEach(async (commentId: ObjectId) => {
+        await mutationGetComment.mutate({tweetId:commentId});
+   })
+
+}
     useEffect(() => {
-        const tweet: Tweet = location.state.tweet
-        setTweet(tweet)
-        tweet.comments?.forEach(async (commentId: ObjectId) => {
-             await mutationGetComment.mutate({tweetId:commentId});
-        })
-    }, [])
+        setComments([])        
+        getComments()          
+    }, [tweet_id])
 
     return (
         <div>

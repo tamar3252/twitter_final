@@ -10,7 +10,7 @@ const UserDetails: FC<UserCopmProps> = ({ user, isConnectedUser }) => {
 
     const [displayUserBox, setDisplayUserBox] = useState(false)
     const [isFollow, setIsFollow] = useState<boolean | null>(null)
-    const [followsNum, setFollowsNum] = useState<number | null>(null)
+    const [followsNum, setFollowsNum] = useState<number | null>(0)
 
     const mutationCheckIsFollow = useMutation<void, unknown>({
         mutationFn: () => checkIsFollow(user._id!),
