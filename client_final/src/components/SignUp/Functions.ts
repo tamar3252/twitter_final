@@ -9,9 +9,11 @@ export const signup = async (body: User): Promise<void> => {
     },
     body: JSON.stringify({
       full_name: { first_name: body.full_name.first_name, last_name: body.full_name.last_name },
-      email: body.email, password: body.password
+      email: body.email, password: body.password,image: body.image
     }),
   });
+  console.log(response);
+  
   return await response.json();
 
 }

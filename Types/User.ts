@@ -5,7 +5,7 @@ export type FullName = {
     last_name: String
 }
 export enum Roles {
-    Admin = "admin",
+    Admin = "manager",
     User = "user"
 }
 export type User = {

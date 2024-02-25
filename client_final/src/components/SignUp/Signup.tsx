@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { Link, NavigateFunction } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { User, UserSignup } from '../../../../Types/User';
@@ -10,27 +10,45 @@ import { toast } from 'react-toastify';
 import { useMutation } from 'react-query';
 import Cookies from 'js-cookie';
 
-const Signup: FC<{}> = ({}) => {
-  const navigate:NavigateFunction = useNavigate();
+const Signup: FC<{}> = ({ }) => {
+  const navigate: NavigateFunction = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm<User>();
+
+  const [image, setImage] = useState(null);
+
+  const handleFileChange = (event) => {
+    setImage(event.target.files[0]);
+  };
 
   const mutationSignup = useMutation<void, unknown, { body: User }>({
     mutationFn: ({ body }) => signup(body),
     onSuccess: async (data: UserSignup) => {
-        if (data.token) {
-            Cookies.set('token', data.token);
-            navigate('/home')
-        } else {
-            toast.error(data , { position: 'top-right' });
-        }
+      if (data.token) {
+        Cookies.set('token', data.token);
+        navigate('/home')
+      } else {
+        toast.error(data, { position: 'top-right' });
+      }
     },
     onError: () => {
-        toast.error('Failed to login', { position: 'top-right' });
+      toast.error('Failed to signup', { position: 'top-right' });
     },
-});
+  });
 
   const signupSubmit = async (data: User) => {
-     await mutationSignup.mutate({body:data})
+  //   const formData = new FormData();
+  
+  // formData.append('full_name.first_name', data.full_name.first_name);
+  // formData.append('full_name.last_name', data.full_name.last_name);
+  // formData.append('email', data.email);
+  // formData.append('password', data.password);
+  
+  // // Append the image file data to the FormData object
+  // if (image) {
+  //   formData.append('image', image);
+  // }
+  data.image=data.image[0].name
+    await mutationSignup.mutate({ body: data })
   }
 
   return (
@@ -92,6 +110,23 @@ const Signup: FC<{}> = ({}) => {
                       }}
                     />
                   </FormControl>
+                </Grid >
+                <Grid item xs={12}>
+                  <FormControl fullWidth>
+                    {/* <TextField
+                      {...register('image')}
+                      label="Image"
+                      variant="outlined"
+                      error={!!errors.image}
+                      helperText={errors.image ? errors.image.message : ''}
+                      onChange={handleFileChange} 
+                    /> */}
+
+
+
+                    <input {...register('image')} type="file" name="image" onChange={handleFileChange} />
+                  </FormControl>
+
                 </Grid>
                 <Grid item xs={12}>
                   <Button type="submit" variant="contained" fullWidth>
@@ -102,7 +137,7 @@ const Signup: FC<{}> = ({}) => {
                   <Typography align="center">
                     Already have an account? <Link to="/">Log In</Link>
                   </Typography>
-                </Grid>               
+                </Grid>
               </Grid>
             </form>
           </Grid>

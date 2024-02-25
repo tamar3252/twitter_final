@@ -1,5 +1,26 @@
 import { ObjectId } from "mongoose";
-import { Tweet } from "../../../../Types/Tweet";
+import Cookies from "js-cookie";
+import { ToastContainer, toast } from 'react-toastify';
+
+
+
+export const deleteTweet = async (tweetId: ObjectId) => {
+    const response: Response = await fetch(`${process.env.REACT_APP_SERVER_URL}/tweet/delete_tweet/${tweetId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `${Cookies.get('token')}`
+        },
+    });    
+    return await response;
+}
+
+
+export const deleteTweenFunc=async(tweetId:ObjectId,setIsChanged:React.Dispatch<React.SetStateAction<boolean>>)=>{
+    const res=await deleteTweet(tweetId).catch((err: Error) => toast.error(err.message))
+    !res.ok&& toast.error(await res.json())
+    setIsChanged(true)
+}
 
 // export const getComment = async (tweetId: ObjectId):Promise<Tweet> => {//change to query
 //         const response:Response = await fetch(`http://localhost:3000/tweet/tweet/${tweetId}`, {

@@ -29,7 +29,7 @@ const Login: FC<{}> = ({ }) => {
       toast.error('Failed to login', { position: 'top-center' });
     },
   })
-
+  
   const loginSubmit = async (data: FormInputs):Promise<void> => {
     await mutationLogin.mutate({ body: data })
   }

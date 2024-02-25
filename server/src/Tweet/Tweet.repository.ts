@@ -10,8 +10,6 @@ export const getTweetsWithFollower = async (follows: ObjectId[]): Promise<Tweet[
     return await TweetModel.find({ user_id: { $in: follows } }).populate('user_id')
 }
 export const getTweet = async (tweetId: ObjectId, userId: ObjectId): Promise<Tweet> => {
-    if (userId)///
-        return await TweetModel.findOne({ user_id: userId, _id: tweetId }).populate('user_id').exec()
   return await TweetModel.findOne({ _id: tweetId }).populate('user_id').exec()
 }
 
@@ -34,6 +32,7 @@ export const removeLike = async (tweetId:ObjectId ,liketId: ObjectId): Promise<v
 
 export const deleteTweet = async (tweetId: ObjectId, userId: ObjectId) => {
     userId? await TweetModel.deleteOne({ _id: tweetId ,user_id:userId}):await TweetModel.deleteOne({ _id: tweetId });
+  }
     //     let tweetsComments;
 
     //     const user = await UserModel.findOne({ _id: userId });
@@ -70,5 +69,9 @@ export const deleteTweet = async (tweetId: ObjectId, userId: ObjectId) => {
     //     }
     //     return await TweetModel.deleteOne({ _id: tweetId });
     // }
-}
+
+
+    export const removeComment= async (tweetId:ObjectId ): Promise<void> => {
+        await TweetModel.updateMany({ comments:tweetId }, { $pull: { comments: tweetId } })
+    }
 

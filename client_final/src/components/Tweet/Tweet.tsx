@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { Tweet } from '../../../../Types/Tweet';
 import { TweetInList } from '../TweetInList/TweetInList';
@@ -8,47 +8,64 @@ import { getComment } from './Functions';
 import { Grid } from '@mui/material';
 import { map } from 'lodash';
 import { useMutation } from 'react-query';
+import { UserDetailsContext } from '../Context';
 
 const TweetComp: FC<{}> = ({ }) => {
     const location = useLocation()
+    const { userDetails } = location.state;
     const [comments, setComments] = useState<Tweet[]>([]);
     const [tweet, setTweet] = useState<Tweet>()
+    const [isChanged, setIsChanged] = useState<boolean>(false)
 
     const mutationGetComment = useMutation<void, unknown, { tweetId: ObjectId }>({
         mutationFn: ({ tweetId }) => getComment(tweetId),
         onSuccess: async (comment) => {
-            await setComments((prevComments) => [...prevComments, comment as Tweet])     
+            await setComments((prevComments) => [...prevComments, comment as Tweet])
         },
         onError: () => {
             toast.error('Failed to login', { position: 'top-right' });
         },
-    });
-    const { tweet_id  } = useParams<{ tweet_id: string  }>();
+    })
 
-    
-const getComments=async()=>{
-    const tweet2 =await getComment(tweet_id as unknown as ObjectId)
-    await setTweet(tweet2)    
-    await tweet2&&tweet2.comments?.forEach(async (commentId: ObjectId) => {
-        await mutationGetComment.mutate({tweetId:commentId});
-   })
+    const { tweet_id } = useParams<{ tweet_id: string }>();
+    const getComments = async ():Promise<void> => {
+        const newTweet = await getComment(tweet_id as unknown as ObjectId)
+        await setTweet(newTweet)
+        await newTweet && newTweet.comments?.forEach(async (commentId: ObjectId) => {
+            await mutationGetComment.mutate({ tweetId: commentId });
+        })
 
-}
+    }
+
     useEffect(() => {
-        setComments([])        
-        getComments()          
+        setComments([])
+        getComments()
     }, [tweet_id])
+
+    const reRenderComments = async () => {
+        const newTweet :Tweet= await getComment(tweet?._id!)
+        await setTweet(newTweet)
+        setComments([])
+        getComments()
+    }
+
+
+    useEffect(() => {
+        tweet&&reRenderComments()
+    }, [isChanged])
 
     return (
         <div>
-            {tweet && <TweetInList tweet={tweet} />}
-            <Grid margin='20px' container justifyContent="center" alignItems="center" >
-                {map(comments, (element) => (
-                    <Grid item xs={10} key={String(element._id)}>
-                        <TweetInList tweet={element} />
-                    </Grid>
-                ))}
-            </Grid>
+            <UserDetailsContext.Provider value={{ userDetails }}>
+                {tweet && <TweetInList tweet={tweet} setIsChanged={setIsChanged} />}
+                <Grid margin='20px' container justifyContent="center" alignItems="center" >
+                    {comments.length != 0 && map(comments, (element) => (
+                        <Grid item xs={10} key={String(element._id)}>
+                            <TweetInList tweet={element} setIsChanged={setIsChanged}/>
+                        </Grid>
+                    ))}
+                </Grid>
+            </UserDetailsContext.Provider>
         </div>
     )
 }

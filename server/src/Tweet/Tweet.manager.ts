@@ -4,7 +4,6 @@ import { AuthRequest } from "requestInterface";
 import * as TweetRepository from './Tweet.repository';
 import * as userManager from '../Users/Users.manager';
 
-
 import { GetUserDetails, UpdateUser, User } from "../../../Types/User";
 
 const ObjectId = require('mongoose').ObjectID;
@@ -57,22 +56,7 @@ export const addComment = async (req: AuthRequest): Promise<GetTweet> => {
 }
 
 export const addlike = async (tweetId: ObjectId, likeId: ObjectId): Promise<UpdateUser> => {
-    // const tweetId :ObjectId= req.tokenData.user_id;
-    // const likeId :ObjectId=req.body.;
-
-    //למצוא את הלייק ולבדוק שהוא קיים
-    // const like = await userRepository.findUserById(userToFollowId)
-    // if (!userToFollow)
-    //     return { status: 401, value: 'user to follow not found' }
-
-    // const response:UpdateWriteOpResult =
-
     await TweetRepository.addLike(tweetId, likeId)
-
-    // if (!response || response.matchedCount == 0)
-    //     return { status: 401, value: 'user not found' }
-    // if (response.modifiedCount == 0)
-    //     return { status: 401, value: 'you already follow this user' }
     return { status: 200, value: 'success' }
 }
 
@@ -89,37 +73,26 @@ export const deleteTweet = async (req: AuthRequest) => {
     session.startTransaction();
     let tweetsComments
     try {
-
         if (userId) {
             const user: GetUserDetails = (await userManager.getUserDetails(req))
             if (!user) {
                 return { status: 500, value: "You dont have permission to delete this tweet" }
             }
             const userRole = (user.value as User).role;
-            console.log(req);
-            
             const tweet: GetTweet = await getTweet(req)
-            console.log((tweet));
-
-            if (userRole === "admin") {                          
-                if (!tweet || ((tweet.value as Tweet).user_id as unknown as User).role === "admin") {
+            if (userRole === "manager") {
+                if (!tweet || (((tweet.value as Tweet).user_id as unknown as User).role === "manager" && ((((tweet.value as Tweet).user_id) as unknown as User)._id as ObjectId).toString() != ((user.value as User)._id as ObjectId).toString())) {                    
                     return { status: 500, value: "You dont have permission to delete this tweet" }
                 }
-               
             }
+
             tweetsComments = (tweet.value as Tweet).comments;
-            // else {
-            //     const userTweet = await TweetModel.findOne({ user_id: userId, _id: tweetId });
-            //     if (!userTweet) {
-            //         throw new Error("tweet not exist")
-            //     }
-            //     tweetsComments = userTweet.comments;
-            // }
         }
-        
+
 
         if (!tweetsComments || tweetsComments.length === 0) {
-            const response = await TweetRepository.deleteTweet(tweetId, userId);
+            const response = await TweetRepository.deleteTweet(tweetId, null);
+            await TweetRepository.removeComment(tweetId)
             return { status: 200, value: response }
         }
 
@@ -131,8 +104,12 @@ export const deleteTweet = async (req: AuthRequest) => {
             if (!commentTweet)
                 return { status: 500, value: "comment not exist" }
             await TweetRepository.deleteTweet((commentTweet.value as Tweet)._id, (commentTweet.value as Tweet).user_id);
+            await TweetRepository.removeComment(tweetId)
+
         }
         const response = await TweetRepository.deleteTweet(tweetId, userId)
+        await TweetRepository.removeComment(tweetId)
+
         await session.commitTransaction();
         session.endSession();
         return { status: 200, value: response }

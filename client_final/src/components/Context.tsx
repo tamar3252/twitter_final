@@ -1,4 +1,5 @@
-import { createContext } from 'react';
+import { createContext, useContext } from 'react';
+import { User } from '../../../Types/User';
 import { ObjectId } from 'mongoose';
 
 interface LikeContextType {
@@ -10,7 +11,21 @@ interface LikeContextType {
     setLikesNum: React.Dispatch<React.SetStateAction<number>>
 }
 
+
+interface UserDetailsContextType {
+    userDetails: User | undefined;
+    // setUserDetails: (userDetails: User | undefined) => void;
+}
+
+const UserDetailsContext = createContext<UserDetailsContextType>({
+    userDetails: undefined,
+    // setUserDetails: () => {},
+});
+
+// export const useUserDetailsContext = () => useContext(UserDetailsContext)
+
+
 const likeContext = createContext<LikeContextType|null>(null);
-export {likeContext};
+export {likeContext,UserDetailsContext};
 
 

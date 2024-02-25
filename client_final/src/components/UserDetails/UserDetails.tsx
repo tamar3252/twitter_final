@@ -1,16 +1,20 @@
 import React, { FC, useEffect, useState } from 'react'
-import { addFollow, changeToManager, checkIsFollow, getAllFollows, removeFollow } from './Functiona';
+import { addFollow, changeToManager, checkIsFollow, getAllFollows, logout, removeFollow } from './Functiona';
 import { Avatar, Box, Button, Grid, Typography } from '@mui/material';
 import { UserCopmProps } from './Types';
 import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
 import { User } from '../../../../Types/User';
+import { NavigateFunction,useNavigate } from 'react-router-dom';
 
 const UserDetails: FC<UserCopmProps> = ({ user, isConnectedUser }) => {
 
     const [displayUserBox, setDisplayUserBox] = useState(false)
     const [isFollow, setIsFollow] = useState<boolean | null>(null)
     const [followsNum, setFollowsNum] = useState<number | null>(0)
+    const [isChanged,setIsChanged]=useState<boolean>(false)
+    const [managerText,setManagerText]=useState("")
+    const navigate:NavigateFunction = useNavigate()
 
     const mutationCheckIsFollow = useMutation<void, unknown>({
         mutationFn: () => checkIsFollow(user._id!),
@@ -42,28 +46,30 @@ const UserDetails: FC<UserCopmProps> = ({ user, isConnectedUser }) => {
     const mutationChangeToManager = useMutation<void, unknown>({
         mutationFn: () => changeToManager(),
         onSuccess: async () => {
-            toast.success('sucess', { position: 'top-center' });
+            await setIsChanged(true)
         },
         onError: () => {
             toast.error('Failed', { position: 'top-center' });
         },
-    });
+    })
+
     const mutationGetAllFollow = useMutation<void, unknown>({
         mutationFn: () => getAllFollows(user._id!),
-        onSuccess: async (data:User[]) => {
+        onSuccess: async (data: User[]) => {
             setFollowsNum(data.length)
         },
         onError: () => {
             toast.error('Failed', { position: 'top-center' });
         },
-    });
+    })
 
     useEffect(() => {
         user && (
             mutationCheckIsFollow.mutate(),
             mutationGetAllFollow.mutate()
         )
-    }, [])
+        
+    }, [isChanged])
 
 
     return (
@@ -74,7 +80,7 @@ const UserDetails: FC<UserCopmProps> = ({ user, isConnectedUser }) => {
                         style={{ position: 'relative' }}>
                         <Avatar onClick={() => displayUserBox ? setDisplayUserBox(false) : setDisplayUserBox(true)}
                             src={user?.image || ''}
-                            sx={{ margin:2, width: 70, height: 70, borderRadius: '50%' }} />
+                            sx={{ margin: 2, width: 70, height: 70, borderRadius: '50%' }} />
 
                         {displayUserBox && (
                             <Box
@@ -95,29 +101,36 @@ const UserDetails: FC<UserCopmProps> = ({ user, isConnectedUser }) => {
                                 <div>
                                     <Grid container>
                                         <Grid item sx={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
-                                            <Avatar src={user.image} sx={{ width: 65, height: 65, marginRight: '10px' }} />
+                                            <Avatar src={user?.image} sx={{ width: 60, height: 60, marginRight: '10px' }} />
                                             <Typography sx={{ marginBottom: '5px' }}>
-                                                {user.full_name.first_name} {user.full_name.last_name}
+                                                {user?.full_name.first_name} {user?.full_name.last_name}
                                             </Typography>
                                         </Grid>
                                     </Grid>
                                     <Typography variant="body1" sx={{ color: 'gray', marginBottom: '10px' }}>
-                                        {user.follows ? user.follows?.length : 0} following
+                                        {user?.follows ? user?.follows?.length : 0} following
                                     </Typography>
                                     <Typography variant="body1" sx={{ color: 'gray', marginBottom: '10px' }}>
                                         {followsNum} followers
                                     </Typography>
                                     {!isConnectedUser ?
-                                        <Button onClick={() => isFollow ?mutationRemoveFollow.mutate() : mutationaddFollow.mutate()}>
+                                        <Button onClick={() => isFollow ? mutationRemoveFollow.mutate() : mutationaddFollow.mutate()}>
                                             {isFollow ? 'Unfollow' : 'Follow'}
                                         </Button> :
-                                        (user.role == 'admin' ?
-                                            <Typography variant="body1" sx={{ color: 'gray', marginBottom: '10px' }}>
-                                                {user.role}
-                                            </Typography> :
-                                            <Button onClick={()=>mutationChangeToManager.mutate()}>become to manager</Button>
+                                        (
+                                            <div>
+                                                {user?.role == 'manager' ? (setManagerText(user?.role),
+                                                    <Typography variant="body1" sx={{ color: 'gray', marginBottom: '10px' }}>
+                                                        {managerText}
+                                                    </Typography> ):
+                                                    <Button onClick={() =>{mutationChangeToManager.mutate(),setManagerText('manager')}}>{managerText==""?"become a manager":managerText}</Button>
+                                                }
+                                            <Button onClick={()=>logout(navigate)}>log out</Button>
+                                            </div>
+
                                         )
                                     }
+                                   
                                 </div>
                             </Box>
                         )}

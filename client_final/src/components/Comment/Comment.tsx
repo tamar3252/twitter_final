@@ -1,6 +1,6 @@
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import { Box, Button, Dialog } from '@mui/material'
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { CommentCopmProps } from './Types'
 import Textarea from '@mui/joy/Textarea';
 import { toast } from 'react-toastify';
@@ -8,22 +8,32 @@ import { Tweet } from '../../../../Types/Tweet';
 import { useMutation } from 'react-query';
 import { ObjectId } from 'mongoose';
 import { addComment } from './Functions';
+import { getComment } from '../Tweet/Functions';
 
-const Comment: FC<CommentCopmProps> = ({ tweet }) => {
+const Comment: FC<CommentCopmProps> = ({ tweet ,setIsChanged}) => {
     const [displayCommentBox, setDisplayCommentBox] = useState<boolean>(false)
     const [commentText, setCommentText] = useState<string>("")
     const [commentsNum, setCommentsNum] = useState<number>(tweet.comments?.length || 0)
 
+    const setNumComment = async () => {
+        const newTweet = await getComment(tweet._id!)
+        setCommentsNum(newTweet.comments?.length!)
+    }
+
+    useEffect(() => {
+        setNumComment()
+    }, [])
+
     const mutationAddComment = useMutation<void, unknown, { tweetId: ObjectId; text: string }>({
         mutationFn: ({ tweetId, text }) => addComment(tweetId, text),
         onSuccess: async () => {
-            await toast.success('Comment added successfully', { position: 'top-right' });
             setCommentsNum((prev: number) => prev + 1);
             setDisplayCommentBox(false);
             setCommentText('');
+            setIsChanged&&setIsChanged((prev)=>!prev)
         },
         onError: () => {
-            toast.error('Failed to add comment', { position: 'top-right' });
+            toast.error('Failed to add comment', { position: 'top-center' });
         },
     })
 

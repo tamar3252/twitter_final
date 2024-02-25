@@ -28,13 +28,9 @@ export const getFollower= async (userId: ObjectId, userToFollowId: ObjectId):Pro
 }
 
 export const changeToManager = async (userId: ObjectId) => {
-    return await UserModel.findOneAndUpdate({ _id: userId }, { role: "admin" })
+    return await UserModel.findOneAndUpdate({ _id: userId }, { role: "manager" })
 }
 
 export const getAllFollowers= async (userId: ObjectId,):Promise<User[]>  => {
     return await UserModel.find({  follows: { $in: [userId] } })
 }
-
-
-
-
