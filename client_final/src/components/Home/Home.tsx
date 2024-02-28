@@ -34,7 +34,6 @@ const Home: FC<{}> = ({ }) => {
     return (
         <Grid width='90%' justifyContent='end' >
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-
                 <div>
                     <UserDetails user={userDetails as User} isConnectedUser={true}></UserDetails>
                     <Dialog

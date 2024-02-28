@@ -4,8 +4,6 @@ import { Like } from '../../../../Types/Like'
 import { Tweet } from "../../../../Types/Tweet";
 import { Like as likeType } from '../../../../Types/Like';
 
-
-
 export const addLike = async (tweetId: ObjectId): Promise<ObjectId> => {
     const response: Response = await fetch(`${process.env.REACT_APP_SERVER_URL}/like/add_like`, {
         method: 'POST',
@@ -17,7 +15,6 @@ export const addLike = async (tweetId: ObjectId): Promise<ObjectId> => {
     })
     return await response.json();
 }
-
 export const removeLike = async (tweetId: ObjectId, likeId: ObjectId): Promise<void> => {
     const response: Response = await fetch(`${process.env.REACT_APP_SERVER_URL}/like/remove_like/${tweetId}/${likeId}`, {
         method: 'DELETE',
@@ -30,7 +27,6 @@ export const removeLike = async (tweetId: ObjectId, likeId: ObjectId): Promise<v
 }
 
 export const getLike = async (tweetId: ObjectId): Promise<Like> => {
-
     const response: Response = await fetch(`${process.env.REACT_APP_SERVER_URL}/like/check_is_liked/${tweetId}`, {
         method: 'GET',
         headers: {

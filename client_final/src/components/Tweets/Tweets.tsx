@@ -11,7 +11,6 @@ const Tweets: FC<{}> = ({ }) => {
   const queryClient: QueryClient = new QueryClient()
   const [isChanged, setIsChanged] = useState<boolean>(false)
 
-
   const { data: allTweets, isLoading: isLoadingAllTweets, isError: isErrorAllTweets } = getAllTweets();
   isErrorAllTweets && toast.error('Error fetching tweets. Please try again later')
 
@@ -21,7 +20,7 @@ const Tweets: FC<{}> = ({ }) => {
 
 
   const [listIndex, setListIndex] = useState<number>(0)
-  const [filterTweetsValue, setFilterTweetsValue] = useState("")
+  const [filterTweetsValue, setFilterTweetsValue] = useState<string>("")
 
   const mutation = useMutation<Tweet[], Error, string>(
     async (type: string) => {
@@ -48,70 +47,60 @@ const Tweets: FC<{}> = ({ }) => {
       },
     }
   )
+
   const sortTweets = (e: SelectChangeEvent<HTMLSelectElement>): void => {
     mutation.mutate(String(e.target.value))
   }
 
-
-
   return (
     <div >
-       {/* <Grid margin='20px' container> */}
       <ToastContainer />
       <Typography variant="h3" align="center" gutterBottom>
-
       </Typography>
-       <Grid container justifyContent='center' spacing={4}>
-       <Grid item>
-      <FormControl  variant="standard" sx={{ justifyContent:'center', minWidth: 200 }}>
-        <InputLabel id="demo-simple-select-standard-label">sort by</InputLabel>
-        <Select onChange={sortTweets} label="sort by">
-          <MenuItem value={'new'}>new tweets</MenuItem >
-          <MenuItem value={'popular'}>popular tweets</MenuItem >
-          <MenuItem value={'new_from_followers'}>new tweets from users you follow</MenuItem >
-          <MenuItem value={'popular_from_followers'}>popular tweets from users you follow</MenuItem >
-        </Select>
-      </FormControl>
-      </Grid>
-      <Grid item>
-      <TextField
-        label="Search"
-        onChange={(e:ChangeEvent<HTMLInputElement>) => setFilterTweetsValue(e.target.value)}
-      />
-      </Grid>
+      <Grid container justifyContent='center' spacing={4}>
+        <Grid item>
+          <FormControl variant="standard" sx={{ justifyContent: 'center', minWidth: 200 }}>
+            <InputLabel id="demo-simple-select-standard-label">sort by</InputLabel>
+            <Select onChange={sortTweets} label="sort by">
+              <MenuItem value={'new'}>new tweets</MenuItem >
+              <MenuItem value={'popular'}>popular tweets</MenuItem >
+              <MenuItem value={'new_from_followers'}>new tweets from users you follow</MenuItem >
+              <MenuItem value={'popular_from_followers'}>popular tweets from users you follow</MenuItem >
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item>
+          <TextField
+            label="Search"
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setFilterTweetsValue(e.target.value)}
+          />
+        </Grid>
 
       </Grid>
       <Grid margin='20px' container justifyContent="center" alignItems="center" >
-
-
-        {isLoadingAllTweets ?
-          toast.info('Loading tweets...') :
-          listIndex == 0 && allTweets && allTweets
-          .filter((element:Tweet) => element.text?.toLowerCase().includes(filterTweetsValue))
-          .map((element:Tweet) => (
-     
-            
+        {(isLoadingAllTweets || isLoadingAllFollowsTweets) && toast.info('Loading tweets...')}
+        {listIndex == 0 && allTweets && allTweets
+          .filter((element: Tweet) => element.text?.toLowerCase().includes(filterTweetsValue))
+          .map((element: Tweet) => (
             <Grid item xs={10}>
               <div key={String(element._id)}>
-                <TweetInList tweet={element} setIsChanged={setIsChanged}/>
+                <TweetInList tweet={element} setIsChanged={setIsChanged} />
               </div>
             </Grid>
           ))}
       </Grid>
       <Grid margin='20px' container justifyContent="center" alignItems="center" >
-        {isLoadingAllFollowsTweets ?
-          toast.info('Loading tweets...') :
+        {
           listIndex == 1 && allFollowsTweets && allFollowsTweets
-          .filter((element:Tweet) => element.text.toLowerCase().includes(filterTweetsValue))
-          .map((element:Tweet) => (
-            <Grid item xs={10}>
-              <div key={String(element._id)}>
-                <TweetInList tweet={element} setIsChanged={setIsChanged}/>
-              </div>
-            </Grid>
-          ))}
+            .filter((element: Tweet) => element.text.toLowerCase().includes(filterTweetsValue))
+            .map((element: Tweet) => (
+              <Grid item xs={10}>
+                <div key={String(element._id)}>
+                  <TweetInList tweet={element} setIsChanged={setIsChanged} />
+                </div>
+              </Grid>
+            ))}
       </Grid>
-      {/* </Grid> */}
     </div>
   )
 }

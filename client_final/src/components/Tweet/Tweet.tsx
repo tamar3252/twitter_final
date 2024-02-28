@@ -18,18 +18,18 @@ const TweetComp: FC<{}> = ({ }) => {
     const [isChanged, setIsChanged] = useState<boolean>(false)
 
     const mutationGetComment = useMutation<void, unknown, { tweetId: ObjectId }>({
-        mutationFn: ({ tweetId }) => getComment(tweetId),
+        mutationFn: async({ tweetId }) => await getComment(tweetId),
         onSuccess: async (comment) => {
             await setComments((prevComments) => [...prevComments, comment as Tweet])
         },
         onError: () => {
-            toast.error('Failed to login', { position: 'top-right' });
+            toast.error('Failed', { position: 'top-right' });
         },
     })
 
     const { tweet_id } = useParams<{ tweet_id: string }>();
     const getComments = async ():Promise<void> => {
-        const newTweet = await getComment(tweet_id as unknown as ObjectId)
+        const newTweet:Tweet = await getComment(tweet_id as unknown as ObjectId)
         await setTweet(newTweet)
         await newTweet && newTweet.comments?.forEach(async (commentId: ObjectId) => {
             await mutationGetComment.mutate({ tweetId: commentId });
@@ -42,8 +42,8 @@ const TweetComp: FC<{}> = ({ }) => {
         getComments()
     }, [tweet_id])
 
-    const reRenderComments = async () => {
-        const newTweet :Tweet= await getComment(tweet?._id!)
+    const reRenderComments = async ():Promise<void> => {
+        const newTweet:Tweet= await getComment(tweet?._id!)
         await setTweet(newTweet)
         setComments([])
         getComments()

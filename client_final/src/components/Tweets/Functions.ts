@@ -2,8 +2,6 @@ import Cookies from "js-cookie";
 import { Tweet } from '../../../../Types/Tweet'
 import { useQuery } from "react-query";
 import { allTweetsQuery } from "./Types";
-import {config} from '../../Config'
-
 
 
 export const getAllTweets = (): allTweetsQuery => {

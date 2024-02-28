@@ -16,7 +16,7 @@ const Login: FC<{}> = ({ }) => {
   const { register, handleSubmit, formState: { errors } } = useForm<FormInputs>();
 
   const mutationLogin = useMutation<void, unknown, { body: FormInputs }>({
-    mutationFn: ({ body }) => login(body),
+    mutationFn: async ({ body }) => await login(body),
     onSuccess: async (data: { token: string }) => {
       if (data.token) {
         Cookies.set('token', data.token);
@@ -29,15 +29,14 @@ const Login: FC<{}> = ({ }) => {
       toast.error('Failed to login', { position: 'top-center' });
     },
   })
-  
-  const loginSubmit = async (data: FormInputs):Promise<void> => {
+
+  const loginSubmit = async (data: FormInputs): Promise<void> => {
     await mutationLogin.mutate({ body: data })
   }
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
       <ToastContainer />
-
       <Box minHeight="100vh" maxWidth="70vh" display="flex" alignItems="center" justifyContent="center">
         <Grid container spacing={3}>
           <Grid item xs={12}>
@@ -83,7 +82,6 @@ const Login: FC<{}> = ({ }) => {
                   <Typography align="center">
                     already jave account?
                     <Link to="/signup">SignUp</Link>
-
                   </Typography>
                 </Grid>
               </Grid>

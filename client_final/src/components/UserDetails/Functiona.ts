@@ -1,7 +1,6 @@
 import {User} from '../../../../Types/User'
 import Cookies from "js-cookie";
 import { ObjectId } from "mongoose";
-import { toast } from "react-toastify";
 import { NavigateFunction } from 'react-router-dom';
 
 export const checkIsFollow=async(userToFollowId:ObjectId):Promise<User>=>{

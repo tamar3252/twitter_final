@@ -6,7 +6,6 @@ import Comment from '../Comment';
 import { User } from '../../../../Types/User'
 import UserDetails from '../UserDetails'
 import { NavigateFunction, useNavigate } from 'react-router-dom'
-import { getComment } from '../Tweet/Functions';
 import { UserDetailsContext } from '../Context';
 import { Button } from '@mui/material';
 import { deleteTweenFunc } from './Functions';
@@ -43,7 +42,6 @@ const TweetInList: FC<TweetInListProps> = ({ tweet,setIsChanged }) => {
                     </Grid>
                 </Grid>
             </Box>
-            {/* </UserDetailsContext.Provider> */}
         </div>
     )
 }

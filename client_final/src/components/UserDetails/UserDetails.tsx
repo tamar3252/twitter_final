@@ -8,16 +8,15 @@ import { User } from '../../../../Types/User';
 import { NavigateFunction,useNavigate } from 'react-router-dom';
 
 const UserDetails: FC<UserCopmProps> = ({ user, isConnectedUser }) => {
-
-    const [displayUserBox, setDisplayUserBox] = useState(false)
+    const [displayUserBox, setDisplayUserBox] = useState<boolean>(false)
     const [isFollow, setIsFollow] = useState<boolean | null>(null)
     const [followsNum, setFollowsNum] = useState<number | null>(0)
     const [isChanged,setIsChanged]=useState<boolean>(false)
-    const [managerText,setManagerText]=useState("")
+    const [managerText,setManagerText]=useState<string>(user?.role!)
     const navigate:NavigateFunction = useNavigate()
 
     const mutationCheckIsFollow = useMutation<void, unknown>({
-        mutationFn: () => checkIsFollow(user._id!),
+        mutationFn: async() =>await checkIsFollow(user._id!),
         onSuccess: async (data: User) => {
             data ? setIsFollow(true) : setIsFollow(false)
         },
@@ -26,7 +25,7 @@ const UserDetails: FC<UserCopmProps> = ({ user, isConnectedUser }) => {
         },
     });
     const mutationaddFollow = useMutation<void, unknown>({
-        mutationFn: () => addFollow(user._id!),
+        mutationFn:async () => await addFollow(user._id!),
         onSuccess: async () => {
             setIsFollow(true)
         },
@@ -35,7 +34,7 @@ const UserDetails: FC<UserCopmProps> = ({ user, isConnectedUser }) => {
         },
     });
     const mutationRemoveFollow = useMutation<void, unknown>({
-        mutationFn: () => removeFollow(user._id!),
+        mutationFn: async() => await removeFollow(user._id!),
         onSuccess: async () => {
             setIsFollow(false)
         },
@@ -44,7 +43,7 @@ const UserDetails: FC<UserCopmProps> = ({ user, isConnectedUser }) => {
         },
     });
     const mutationChangeToManager = useMutation<void, unknown>({
-        mutationFn: () => changeToManager(),
+        mutationFn:async () =>await changeToManager(),
         onSuccess: async () => {
             await setIsChanged(true)
         },
@@ -52,9 +51,8 @@ const UserDetails: FC<UserCopmProps> = ({ user, isConnectedUser }) => {
             toast.error('Failed', { position: 'top-center' });
         },
     })
-
     const mutationGetAllFollow = useMutation<void, unknown>({
-        mutationFn: () => getAllFollows(user._id!),
+        mutationFn:async () =>await getAllFollows(user._id!),
         onSuccess: async (data: User[]) => {
             setFollowsNum(data.length)
         },
@@ -68,7 +66,6 @@ const UserDetails: FC<UserCopmProps> = ({ user, isConnectedUser }) => {
             mutationCheckIsFollow.mutate(),
             mutationGetAllFollow.mutate()
         )
-        
     }, [isChanged])
 
 
@@ -119,18 +116,16 @@ const UserDetails: FC<UserCopmProps> = ({ user, isConnectedUser }) => {
                                         </Button> :
                                         (
                                             <div>
-                                                {user?.role == 'manager' ? (setManagerText(user?.role),
+                                                {managerText == 'manager' ?
                                                     <Typography variant="body1" sx={{ color: 'gray', marginBottom: '10px' }}>
                                                         {managerText}
-                                                    </Typography> ):
-                                                    <Button onClick={() =>{mutationChangeToManager.mutate(),setManagerText('manager')}}>{managerText==""?"become a manager":managerText}</Button>
+                                                    </Typography> :
+                                                    <Button onClick={() =>{mutationChangeToManager.mutate(),setManagerText('manager')}}>{managerText!=user.role?"become a manager":managerText}</Button>
                                                 }
                                             <Button onClick={()=>logout(navigate)}>log out</Button>
                                             </div>
-
                                         )
-                                    }
-                                   
+                                    }                                   
                                 </div>
                             </Box>
                         )}
