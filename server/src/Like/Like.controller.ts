@@ -1,6 +1,6 @@
 
 import { Request, Response } from "express";
-import { AddLike, GetLike, RemoveLike } from "../../../Types/Like";
+import { AddLike, GetLike, RemoveLike } from "../../Types/Like";
 const LikeManager = require('./Like.manager')
 
 export const addLike = async (req: Request, res: Response):Promise<void> => {

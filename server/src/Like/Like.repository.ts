@@ -1,6 +1,6 @@
 import { Document, ObjectId, UpdateWriteOpResult } from 'mongoose';
 import { DeleteResult } from 'mongodb';
-import { Like } from '../../../Types/Like';
+import { Like } from '../../Types/Like';
 import { LikeModel } from '../Models/LikeModel'
 
 export const addLike = async (likeObj: Like): Promise<Document<Like>> => {

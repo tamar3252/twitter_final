@@ -1,4 +1,4 @@
-import {User} from '../../../../Types/User'
+import {User} from '../../../Types/User'
 import Cookies from "js-cookie";
 import { ObjectId } from "mongoose";
 import { NavigateFunction } from 'react-router-dom';

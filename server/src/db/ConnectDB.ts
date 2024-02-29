@@ -3,7 +3,7 @@ const mongooseDB = require('mongoose');
 
 const main=async()=> {
     await mongooseDB.connect(
-        `mongodb://localhost:27017/twitter`,
+        `mongodb://db:27017/twitter`,
         {
             useNewUrlParser: true,
             useUnifiedTopology: true,

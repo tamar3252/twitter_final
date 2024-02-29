@@ -1,5 +1,5 @@
 import { ObjectId } from "mongoose";
-import { AddLike, GetLike, Like, RemoveLike } from "../../../Types/Like";
+import { AddLike, GetLike, Like, RemoveLike } from "../../Types/Like";
 
 import { AuthRequest } from "requestInterface";
 import * as likeRepository from './Like.repository'

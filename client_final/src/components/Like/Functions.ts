@@ -1,8 +1,8 @@
 import Cookies from "js-cookie";
 import { ObjectId } from "mongoose";
-import { Like } from '../../../../Types/Like'
-import { Tweet } from "../../../../Types/Tweet";
-import { Like as likeType } from '../../../../Types/Like';
+import { Like } from '../../../Types/Like'
+import { Tweet } from "../../../Types/Tweet";
+import { Like as likeType } from '../../../Types/Like';
 
 export const addLike = async (tweetId: ObjectId): Promise<ObjectId> => {
     const response: Response = await fetch(`${process.env.REACT_APP_SERVER_URL}/like/add_like`, {

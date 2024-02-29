@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema, Types } from "mongoose";
-import {Tweet} from '../../../Types/Tweet'
+import {Tweet} from '../../Types/Tweet'
 
 type TweetDocument = Tweet & Document;
 

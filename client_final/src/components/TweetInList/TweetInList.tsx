@@ -3,7 +3,7 @@ import { TweetInListProps } from './Types'
 import { Box, Grid, Typography } from '@mui/material'
 import Like from '../Like';
 import Comment from '../Comment';
-import { User } from '../../../../Types/User'
+import { User } from '../../../Types/User'
 import UserDetails from '../UserDetails'
 import { NavigateFunction, useNavigate } from 'react-router-dom'
 import { UserDetailsContext } from '../Context';

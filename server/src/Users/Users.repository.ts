@@ -1,7 +1,7 @@
 import { UserModel } from "../Models/UserModel";
 import bcrypt from "bcrypt";
-import { Document, ObjectId, UpdateWriteOpResult } from 'mongoose';
-import { User } from "../../../Types/User";
+import { ObjectId, UpdateWriteOpResult } from 'mongoose';
+import { User } from "../../Types/User";
 
 export const findUserByEmail = async (email: ObjectId):Promise<User> => {
     return await UserModel.findOne({ email })

@@ -1,6 +1,6 @@
 import Cookies from "js-cookie";
 import { ObjectId } from "mongoose";
-import { Tweet } from "../../../../Types/Tweet";
+import { Tweet } from "../../../Types/Tweet";
 
  export const addComment = async (tweetId: ObjectId, text: string): Promise<Tweet> => {
     const response: Response = await fetch(`${process.env.REACT_APP_SERVER_URL}/tweet/add_comment_to_tweet`, {

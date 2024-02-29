@@ -1,6 +1,6 @@
 import React, { FC, useContext, useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
-import { Tweet } from '../../../../Types/Tweet';
+import { Tweet } from '../../../Types/Tweet';
 import { TweetInList } from '../TweetInList/TweetInList';
 import { ObjectId } from 'mongoose';
 import { toast } from 'react-toastify';

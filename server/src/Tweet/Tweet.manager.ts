@@ -1,10 +1,10 @@
 import mongoose, { ObjectId, Schema } from "mongoose";
-import { GetTweets, GetTweet, Tweet } from "../../../Types/Tweet";
+import { GetTweets, GetTweet, Tweet } from "../../Types/Tweet";
 import { AuthRequest } from "requestInterface";
 import * as TweetRepository from './Tweet.repository';
 import * as userManager from '../Users/Users.manager';
 
-import { GetUserDetails, UpdateUser, User } from "../../../Types/User";
+import { GetUserDetails, UpdateUser, User } from "../../Types/User";
 
 const ObjectId = require('mongoose').ObjectID;
 

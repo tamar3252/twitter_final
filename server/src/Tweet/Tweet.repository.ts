@@ -1,5 +1,5 @@
 import { TweetModel } from "../Models/TweetModel";
-import { Tweet } from "../../../Types/Tweet";
+import { Tweet } from "../../Types/Tweet";
 import { ObjectId } from 'mongoose';
 
 

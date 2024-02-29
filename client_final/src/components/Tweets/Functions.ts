@@ -1,5 +1,5 @@
 import Cookies from "js-cookie";
-import { Tweet } from '../../../../Types/Tweet'
+import { Tweet } from '../../../Types/Tweet'
 import { useQuery } from "react-query";
 import { allTweetsQuery } from "./Types";
 

@@ -1,7 +1,7 @@
 import {  Response   } from "express";
 import * as userManager from './Users.manager';
 import { AuthRequest } from "requestInterface";
-import { GetUserDetails, UserLogin, UserSignup, UpdateUser, GetUsers } from "../../../Types/User";
+import { GetUserDetails, UserLogin, UserSignup, UpdateUser, GetUsers } from "../../Types/User";
 
 
 export const login = async (req:AuthRequest, res: Response):Promise<void>=> {

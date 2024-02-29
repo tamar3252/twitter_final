@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { User } from '../../../Types/User';
+import { User } from '../../Types/User';
 import { ObjectId } from 'mongoose';
 
 interface LikeContextType {

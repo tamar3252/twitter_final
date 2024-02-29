@@ -4,7 +4,7 @@ import { FC, useState } from 'react'
 import { Textarea } from '@mui/joy'
 import { addTweet, useUserDetailsQuery } from './Functions'
 import { toast } from 'react-toastify'
-import { User } from '../../../../Types/User.js'
+import { User } from '../../../Types/User.js'
 import UserDetails from '../UserDetails';
 import { UseMutationResult, useMutation } from 'react-query'
 import { UserDetailsContext } from '../Context'

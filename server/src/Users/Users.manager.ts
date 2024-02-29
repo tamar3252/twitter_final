@@ -3,7 +3,7 @@ import { checkPassword, createToken } from '../Funcs';
 import * as userRepository from './Users.repository';
 import { Request } from "express";
 import { Document, ObjectId, Types, UpdateWriteOpResult } from 'mongoose';
-import { GetUserDetails, UserLogin, UserSignup, UpdateUser, User, GetUsers } from '../../../Types/User';
+import { GetUserDetails, UserLogin, UserSignup, UpdateUser, User, GetUsers } from '../../Types/User';
 import { UserModel } from 'Models/UserModel';
 
 const ObjectId = require('mongoose').ObjectID;

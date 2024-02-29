@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react';
 import { Link, NavigateFunction } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { User, UserSignup } from '../../../../Types/User';
+import { User, UserSignup } from '../../../Types/User';
 import { Box, Grid, Typography, TextField, FormControl, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { signup } from './Functions';

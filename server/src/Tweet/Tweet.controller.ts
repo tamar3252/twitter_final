@@ -1,5 +1,5 @@
 import { Request , Response   } from "express";
-import { GetTweets, GetTweet } from "../../../Types/Tweet";
+import { GetTweets, GetTweet } from "../../Types/Tweet";
 const TweetManager = require('./Tweet.manager');
 
 export const getAllTweets = async (req: Request, res: Response):Promise<void> => {

@@ -4,7 +4,7 @@ import { Avatar, Box, Button, Grid, Typography } from '@mui/material';
 import { UserCopmProps } from './Types';
 import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
-import { User } from '../../../../Types/User';
+import { User } from '../../../Types/User';
 import { NavigateFunction,useNavigate } from 'react-router-dom';
 
 const UserDetails: FC<UserCopmProps> = ({ user, isConnectedUser }) => {

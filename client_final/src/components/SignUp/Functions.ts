@@ -1,4 +1,4 @@
-import { User } from '../../../../Types/User'
+import { User } from '../../../Types/User'
 
 export const signup = async (body: User): Promise<void> => {
   const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/user/signup`, {

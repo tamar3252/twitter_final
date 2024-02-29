@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FC, useState } from 'react'
 import { sortByNew, sortByPopular, getAllFollowsTweets, getAllTweets } from './Functions'
-import { Tweet } from '../../../../Types/Tweet'
+import { Tweet } from '../../../Types/Tweet'
 import { TweetInList } from '../TweetInList/TweetInList'
 import { QueryClient, useMutation } from 'react-query'
 import { FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material'

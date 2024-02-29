@@ -1,5 +1,5 @@
 import Cookies from "js-cookie";
-import { User } from "../../../../Types/User";
+import { User } from "../../../Types/User";
 import { UseQueryResult, useQuery } from "react-query";
 
 export const addTweet = async (text: string):Promise<void> => {

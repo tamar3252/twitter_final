@@ -4,7 +4,7 @@ import React, { FC, useEffect, useState } from 'react'
 import { CommentCopmProps } from './Types'
 import Textarea from '@mui/joy/Textarea';
 import { toast } from 'react-toastify';
-import { Tweet } from '../../../../Types/Tweet';
+import { Tweet } from '../../../Types/Tweet';
 import { useMutation } from 'react-query';
 import { ObjectId } from 'mongoose';
 import { addComment } from './Functions';
