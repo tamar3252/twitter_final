@@ -3,23 +3,35 @@ import { GetTweets, GetTweet, Tweet } from "../../Types/Tweet";
 import { AuthRequest } from "requestInterface";
 import * as TweetRepository from './Tweet.repository';
 import * as userManager from '../Users/Users.manager';
-
 import { GetUserDetails, UpdateUser, User } from "../../Types/User";
-
 const ObjectId = require('mongoose').ObjectID;
 
 export const getAllTweets = async (req: AuthRequest): Promise<GetTweets> => {
-    const userId: ObjectId = req.tokenData?.user_id
-    const allTweets: Tweet[] = await TweetRepository.getAllTweets(userId)
-    return { status: 200, value: allTweets }
+    const userId: ObjectId = req.tokenData?.user_id;
+    const allTweets: Tweet[] = await TweetRepository.getAllTweets(userId);
+    const filteredTweets = await Promise.all(allTweets.map(async (item) => {
+        const res: Tweet = await TweetRepository.isMainTweet(item._id);
+        return !res ? item : null;
+    }));
+    const finalTweets = filteredTweets.filter(tweet => tweet !== null);
+    return { status: 200, value: finalTweets };
 }
-
+export const getYourTweets = async (req: AuthRequest): Promise<GetTweets> => {
+    const userId: ObjectId = req.tokenData?.user_id
+    const allTweets: Tweet[] = await TweetRepository.getYourTweets(userId)
+    const filteredTweets = await Promise.all(allTweets.map(async (item) => {
+        const res: Tweet = await TweetRepository.isMainTweet(item._id);
+        return !res ? item : null;
+    }));
+    const finalTweets = filteredTweets.filter(tweet => tweet !== null);
+    return { status: 200, value: finalTweets };
+}
 export const getTweetsWithFollower = async (req: AuthRequest): Promise<GetTweets> => {
     const userDetails: { status: number; value: User | string } = await userManager.getUserDetails(req);
     const followsId: ObjectId[] = (userDetails.value as User).follows;
     const allTweetswithFollower: Tweet[] = await TweetRepository.getTweetsWithFollower(followsId);
     return { status: 200, value: allTweetswithFollower };
-};
+}
 export const getTweet = async (req: AuthRequest): Promise<GetTweet> => {
     const tweetId: ObjectId = (req.params.tweet_id) as ObjectId
     const userId: ObjectId = req.tokenData?.user_id
@@ -30,8 +42,6 @@ export const getTweet = async (req: AuthRequest): Promise<GetTweet> => {
     const tweet: Tweet = await TweetRepository.getTweet(tweetId, null)
     return { status: 200, value: tweet }
 }
-
-
 export const addTweet = async (req: AuthRequest): Promise<GetTweet> => {
     const userId: ObjectId = req.tokenData.user_id;
     const text: String = req.body.text
@@ -42,7 +52,6 @@ export const addTweet = async (req: AuthRequest): Promise<GetTweet> => {
     await TweetRepository.addTweet(tweet)
     return { status: 200, value: tweet }
 }
-
 export const addComment = async (req: AuthRequest): Promise<GetTweet> => {
     const userId: ObjectId = req.tokenData.user_id;
     const tweetId: ObjectId = req.body.tweetId
@@ -54,18 +63,14 @@ export const addComment = async (req: AuthRequest): Promise<GetTweet> => {
     await TweetRepository.addCommentIdToTweet(tweetId, commentId)
     return { status: 200, value: 'success' }
 }
-
 export const addlike = async (tweetId: ObjectId, likeId: ObjectId): Promise<UpdateUser> => {
     await TweetRepository.addLike(tweetId, likeId)
     return { status: 200, value: 'success' }
 }
-
-
 export const removeLike = async (tweetId: ObjectId, likeId: ObjectId): Promise<UpdateUser> => {
     await TweetRepository.removeLike(tweetId, likeId)
     return { status: 200, value: 'success' }
 }
-
 export const deleteTweet = async (req: AuthRequest) => {
     const userId = req.tokenData.user_id;
     const tweetId: ObjectId = req.params.tweet_id;
@@ -81,7 +86,7 @@ export const deleteTweet = async (req: AuthRequest) => {
             const userRole = (user.value as User).role;
             const tweet: GetTweet = await getTweet(req)
             if (userRole === "manager") {
-                if (!tweet || (((tweet.value as Tweet).user_id as unknown as User).role === "manager" && ((((tweet.value as Tweet).user_id) as unknown as User)._id as ObjectId).toString() != ((user.value as User)._id as ObjectId).toString())) {                    
+                if (!tweet || (((tweet.value as Tweet).user_id as unknown as User).role === "manager" && ((((tweet.value as Tweet).user_id) as unknown as User)._id as ObjectId).toString() != ((user.value as User)._id as ObjectId).toString())) {
                     return { status: 500, value: "You dont have permission to delete this tweet" }
                 }
             }

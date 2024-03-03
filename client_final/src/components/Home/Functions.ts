@@ -28,3 +28,4 @@ export const useUserDetailsQuery = (): UseQueryResult<User> => {
     return useQuery<User>('UserDetails', getUserDetails);
 };
 
+

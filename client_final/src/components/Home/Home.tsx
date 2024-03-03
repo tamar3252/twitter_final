@@ -32,8 +32,8 @@ const Home: FC<{}> = ({ }) => {
     }
 
     return (
-        <Grid width='90%' justifyContent='end' >
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Grid width='90%' justifyContent='center' >
+            <div style={{ display: 'flex', justifyContent: 'space-around' }}>
                 <div>
                     <UserDetails user={userDetails as User} isConnectedUser={true}></UserDetails>
                     <Dialog
@@ -51,9 +51,12 @@ const Home: FC<{}> = ({ }) => {
                         </Box>
                     </Dialog>
                 </div>
+
                 <div>
                     <Button sx={{ margin: 2, borderRadius: '10px' }} variant="contained" onClick={() => setDisplayCommentBox(true)}>post tweet</Button>
                 </div>
+          
+                
             </div>
             <UserDetailsContext.Provider value={{ userDetails }}>
                 <Tweets></Tweets>

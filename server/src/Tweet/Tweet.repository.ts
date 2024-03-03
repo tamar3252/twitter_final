@@ -3,14 +3,20 @@ import { Tweet } from "../../Types/Tweet";
 import { ObjectId } from 'mongoose';
 
 
-export const getAllTweets = async ( userId: ObjectId): Promise<Tweet[]> => {
-    return await TweetModel.find({ user_id: { $ne: userId } }).populate('user_id')
+export const getAllTweets = async (userId: ObjectId): Promise<Tweet[]> => {
+    return await TweetModel.find({ user_id: { $ne: userId }}).populate('user_id')
+}
+export const isMainTweet = async (tweetId: ObjectId): Promise<Tweet> => {
+    return await TweetModel.findOne({ comments: { $in: tweetId }}).populate('user_id')
+}
+export const getYourTweets = async (userId: ObjectId): Promise<Tweet[]> => {
+    return await TweetModel.find({ user_id: userId }).populate('user_id')
 }
 export const getTweetsWithFollower = async (follows: ObjectId[]): Promise<Tweet[]> => {
     return await TweetModel.find({ user_id: { $in: follows } }).populate('user_id')
 }
 export const getTweet = async (tweetId: ObjectId, userId: ObjectId): Promise<Tweet> => {
-  return await TweetModel.findOne({ _id: tweetId }).populate('user_id').exec()
+    return await TweetModel.findOne({ _id: tweetId }).populate('user_id').exec()
 }
 
 export const addTweet = async (tweetObj: Object): Promise<Tweet> => {
@@ -22,56 +28,56 @@ export const addCommentIdToTweet = async (tweetId: ObjectId, commentId: ObjectId
     await TweetModel.updateOne({ _id: tweetId }, { $addToSet: { comments: commentId } })
 }
 
-export const addLike = async (tweetId:ObjectId ,liketId: ObjectId): Promise<void> => {
+export const addLike = async (tweetId: ObjectId, liketId: ObjectId): Promise<void> => {
     await TweetModel.updateOne({ _id: tweetId }, { $addToSet: { likes: liketId } })
 }
 
-export const removeLike = async (tweetId:ObjectId ,liketId: ObjectId): Promise<void> => {
+export const removeLike = async (tweetId: ObjectId, liketId: ObjectId): Promise<void> => {
     await TweetModel.updateOne({ _id: tweetId }, { $pull: { likes: liketId } })
 }
 
 export const deleteTweet = async (tweetId: ObjectId, userId: ObjectId) => {
-    userId? await TweetModel.deleteOne({ _id: tweetId ,user_id:userId}):await TweetModel.deleteOne({ _id: tweetId });
-  }
-    //     let tweetsComments;
+    userId ? await TweetModel.deleteOne({ _id: tweetId, user_id: userId }) : await TweetModel.deleteOne({ _id: tweetId });
+}
+//     let tweetsComments;
 
-    //     const user = await UserModel.findOne({ _id: userId });
-    //     if (!user) {
-    //         throw new Error("You dont have permission to delete this tweet")
-    //     }
+//     const user = await UserModel.findOne({ _id: userId });
+//     if (!user) {
+//         throw new Error("You dont have permission to delete this tweet")
+//     }
 
-    //     const userRole = user.role;
-    //     if (userRole === "admin") {
-    //         const tweet = await TweetModel.findOne({ _id: tweetId }).populate('user_id');
-    //         if (!tweet || tweet.user_id.role === "admin") {
-    //             throw new Error("You dont have permission to delete this tweet")
-    //         }
-    //         tweetsComments = tweet.comments;
-    //     }
-    //     else {
-    //         const userTweet = await TweetModel.findOne({ user_id: userId, _id: tweetId });
-    //         if (!userTweet) {
-    //             throw new Error("tweet not exist")
-    //         }
-    //         tweetsComments = userTweet.comments;
-    //     }
+//     const userRole = user.role;
+//     if (userRole === "admin") {
+//         const tweet = await TweetModel.findOne({ _id: tweetId }).populate('user_id');
+//         if (!tweet || tweet.user_id.role === "admin") {
+//             throw new Error("You dont have permission to delete this tweet")
+//         }
+//         tweetsComments = tweet.comments;
+//     }
+//     else {
+//         const userTweet = await TweetModel.findOne({ user_id: userId, _id: tweetId });
+//         if (!userTweet) {
+//             throw new Error("tweet not exist")
+//         }
+//         tweetsComments = userTweet.comments;
+//     }
 
-    //     if (!tweetsComments || tweetsComments.length === 0) {
-    //         return await TweetModel.deleteOne({ _id: tweetId });
-    //     }
-
-
-    //     for (const commentId of tweetsComments) {
-    //         const commentTweet = await TweetModel.findOne({ _id: commentId });
-    //         if (!commentTweet)
-    //             throw new Error("comment not exist")
-    //         await TweetRepository.deleteTweet(commentTweet._id, commentTweet.user_id);
-    //     }
-    //     return await TweetModel.deleteOne({ _id: tweetId });
-    // }
+//     if (!tweetsComments || tweetsComments.length === 0) {
+//         return await TweetModel.deleteOne({ _id: tweetId });
+//     }
 
 
-    export const removeComment= async (tweetId:ObjectId ): Promise<void> => {
-        await TweetModel.updateMany({ comments:tweetId }, { $pull: { comments: tweetId } })
-    }
+//     for (const commentId of tweetsComments) {
+//         const commentTweet = await TweetModel.findOne({ _id: commentId });
+//         if (!commentTweet)
+//             throw new Error("comment not exist")
+//         await TweetRepository.deleteTweet(commentTweet._id, commentTweet.user_id);
+//     }
+//     return await TweetModel.deleteOne({ _id: tweetId });
+// }
+
+
+export const removeComment = async (tweetId: ObjectId): Promise<void> => {
+    await TweetModel.updateMany({ comments: tweetId }, { $pull: { comments: tweetId } })
+}
 

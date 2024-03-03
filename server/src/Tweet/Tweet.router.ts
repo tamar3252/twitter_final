@@ -6,6 +6,7 @@ import * as tweetValidation from "./Tweet.validator";
 const routerTweet:Router = express.Router();
 
 routerTweet.get("/all_tweets",authUser,TweetController.getAllTweets)
+routerTweet.get("/your_tweets",authUser,TweetController.getYourTweets)
 routerTweet.get("/tweet/:tweet_id",TweetController.getTweet)
 routerTweet.get("/tweets_with_follower",authUser,TweetController.getTweetsWithFollower)
 routerTweet.post("/add_tweet",tweetValidation.tweetValidation, authUser,TweetController.addTweet)

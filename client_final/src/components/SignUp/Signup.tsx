@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import { Link, NavigateFunction } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { User, UserSignup } from '../../../Types/User';
@@ -13,11 +13,6 @@ import Cookies from 'js-cookie';
 const Signup: FC<{}> = ({ }) => {
   const navigate: NavigateFunction = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm<User>();
-  const [image, setImage] = useState(null);
-
-  const handleFileChange = (event) => {
-    setImage(event.target.files[0]);
-  };
 
   const mutationSignup = useMutation<void, unknown, { body: User }>({
     mutationFn: async({ body }) =>await signup(body),
@@ -35,7 +30,6 @@ const Signup: FC<{}> = ({ }) => {
   });
 
   const signupSubmit = async (data: User) => {
-  data.image=data.image[0].name
     await mutationSignup.mutate({ body: data })
   }
 
@@ -101,9 +95,19 @@ const Signup: FC<{}> = ({ }) => {
                 </Grid >
                 <Grid item xs={12}>
                   <FormControl fullWidth>
-                    <input {...register('image')} type="file" name="image" onChange={handleFileChange} />
+                    <TextField
+                      {...register('image')}
+                      label="image"
+                      type="text"
+                      variant="outlined"
+                      error={!!errors.image}
+                      InputProps={{
+                        endAdornment: <LockOutlinedIcon />,
+                      }}
+                    />
                   </FormControl>
-                </Grid>
+                </Grid >
+   
                 <Grid item xs={12}>
                   <Button type="submit" variant="contained" fullWidth>
                     Sign Up

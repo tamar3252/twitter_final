@@ -8,6 +8,12 @@ export const getAllTweets = async (req: Request, res: Response):Promise<void> =>
     })
     res.status(respose.status).json(respose.value)
 }
+export const getYourTweets = async (req: Request, res: Response):Promise<void> => {
+    const respose:GetTweets = await TweetManager.getYourTweets(req).catch((err: Error) => {
+        return { status: 500, value: err.message }
+    })
+    res.status(respose.status).json(respose.value)
+}
 export const getTweetsWithFollower = async (req: Request, res: Response):Promise<void> => {
     const respose:GetTweets = await TweetManager.getTweetsWithFollower(req).catch((err: Error) => {
         return { status: 500, value: err.message }

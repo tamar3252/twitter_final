@@ -22,6 +22,24 @@ export const getAllTweets = (): allTweetsQuery => {
     return useAllTweetsQuery()
 }
 
+export const getYourTweets = (): allTweetsQuery => {
+    const useYourTweetsQuery = (): allTweetsQuery => {
+        return useQuery<Tweet[]>('yourTweets',
+            async (): Promise<Tweet[]> => {
+                const response: Response = await fetch(`${process.env.REACT_APP_SERVER_URL}/tweet/your_tweets`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `${Cookies.get('token')}`
+                    },
+                });
+                return await response.json();
+            }
+        );
+    }
+    return useYourTweetsQuery()
+}
+
 export const getAllFollowsTweets = (): allTweetsQuery => {
     const useAllFollowsTweetsQuery = (): allTweetsQuery => {
         return useQuery<Tweet[], Error>('allFollowsTweets',
@@ -39,11 +57,11 @@ export const getAllFollowsTweets = (): allTweetsQuery => {
     return useAllFollowsTweetsQuery()
 }
 
-export const sortByNew = (allTweets: Tweet[] ): Tweet[] => {
+export const sortByNew = (allTweets: Tweet[]): Tweet[] => {
     return allTweets.sort((a, b) => String(b._id).localeCompare(String(a._id)));
 }
 
-export const sortByPopular = (allTweets: Tweet[] ): Tweet[] => {
+export const sortByPopular = (allTweets: Tweet[]): Tweet[] => {
     return allTweets.sort((a: Tweet, b: Tweet) => b.likes!.length - a.likes!.length);
 
 }

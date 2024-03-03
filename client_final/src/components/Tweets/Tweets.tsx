@@ -1,9 +1,9 @@
 import React, { ChangeEvent, FC, useState } from 'react'
-import { sortByNew, sortByPopular, getAllFollowsTweets, getAllTweets } from './Functions'
+import { sortByNew, sortByPopular, getAllFollowsTweets, getAllTweets, getYourTweets } from './Functions'
 import { Tweet } from '../../../Types/Tweet'
 import { TweetInList } from '../TweetInList/TweetInList'
 import { QueryClient, useMutation } from 'react-query'
-import { FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material'
+import { Button, FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material'
 import { ToastContainer, toast } from 'react-toastify'
 import { TextField } from '@mui/material'
 
@@ -14,7 +14,9 @@ const Tweets: FC<{}> = ({ }) => {
   const { data: allTweets, isLoading: isLoadingAllTweets, isError: isErrorAllTweets } = getAllTweets();
   isErrorAllTweets && toast.error('Error fetching tweets. Please try again later')
 
-
+  const { data: yourTweets, isLoading: isLoadingYourTweets, isError: isErrorYourTweets } = getYourTweets();
+  isErrorAllTweets && toast.error('Error fetching tweets. Please try again later')
+   
   const { data: allFollowsTweets, isLoading: isLoadingAllFollowsTweets, isError: isErrorAllFollowsTweets } = getAllFollowsTweets();
   isErrorAllFollowsTweets && toast.error('Error fetching tweets. Please try again later')
 
@@ -75,6 +77,11 @@ const Tweets: FC<{}> = ({ }) => {
             onChange={(e: ChangeEvent<HTMLInputElement>) => setFilterTweetsValue(e.target.value)}
           />
         </Grid>
+        <Grid item>
+          <Button sx={{ margin: 2, borderRadius: '10px' }} variant="contained" onClick={() => {setListIndex(2);
+          }}>your tweets</Button>
+        </Grid>
+
 
       </Grid>
       <Grid margin='20px' container justifyContent="center" alignItems="center" >
@@ -92,6 +99,20 @@ const Tweets: FC<{}> = ({ }) => {
       <Grid margin='20px' container justifyContent="center" alignItems="center" >
         {
           listIndex == 1 && allFollowsTweets && allFollowsTweets
+            .filter((element: Tweet) => element.text.toLowerCase().includes(filterTweetsValue))
+            .map((element: Tweet) => (
+              <Grid item xs={10}>
+                <div key={String(element._id)}>
+                  <TweetInList tweet={element} setIsChanged={setIsChanged} />
+                </div>
+              </Grid>
+            ))}
+      </Grid>
+
+      <Grid margin='20px' container justifyContent="center" alignItems="center" >
+        {
+          listIndex == 2
+           && yourTweets && yourTweets
             .filter((element: Tweet) => element.text.toLowerCase().includes(filterTweetsValue))
             .map((element: Tweet) => (
               <Grid item xs={10}>
