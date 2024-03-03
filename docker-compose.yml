@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  client:
+    build: ./client_final
+    ports:
+      - "3000:3000"
+    environment:
+      REACT_APP_SERVER_URL: http://localhost:3002  
+      DISABLE_ESLINT_PLUGIN: "true"  
+      TSC_COMPILE_ON_ERROR: "true"   
+
+  server:
+    build: ./server
+    ports:
+      - "3002:3002"
+    environment:
+      TOKEN_SECRET: "tamar12"  
+      PORT: "3002"             
+  db:
+    image: mongo:latest  
+    ports:
+      - 27017:27017
+    # volumes:
+    #   - /path/to/twitter_final/server/db:/data/db
+
+
+
+# volumes:
+#   twitter_final: 

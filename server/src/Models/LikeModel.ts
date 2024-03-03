@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema, Types } from "mongoose";
-import {Like} from '../../../Types/Like'
+import {Like} from '../../Types/Like'
 
 type LikeDocument = Like & Document
 

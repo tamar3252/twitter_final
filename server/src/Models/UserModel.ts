@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema, Types } from "mongoose";
-import { Roles, User, FullName } from '../../../Types/User'
+import { Roles, User, FullName } from '../../Types/User'
 
 const fullNameSchema = new Schema<FullName>({
     first_name: String,
@@ -19,6 +19,4 @@ const userSchema = new Schema<UserDocument>({
 })
 
 
-
 export const UserModel = mongoose.model<UserDocument>("users", userSchema);
-// exports.UserModel = mongoose.model("users", userSchema);

@@ -1,7 +1,7 @@
 import {  Response   } from "express";
 import * as userManager from './Users.manager';
 import { AuthRequest } from "requestInterface";
-import { GetUserDetails, UserLogin, UserSignup, UpdateUser } from "../../../Types/User";
+import { GetUserDetails, UserLogin, UserSignup, UpdateUser, GetUsers } from "../../Types/User";
 
 
 export const login = async (req:AuthRequest, res: Response):Promise<void>=> {
@@ -34,6 +34,20 @@ export const removeFollower = async (req:AuthRequest, res: Response):Promise<voi
     })
     res.status(respose.status).json(respose.value)
 }
+
+export const getFollower = async (req:AuthRequest, res: Response):Promise<void> => {
+    const respose:GetUserDetails = await userManager.getFollower(req).catch((err: Error) => {
+        return { status: 500, value: err.message }
+    })
+    res.status(respose.status).json(respose.value)
+}
+export const getAllFollowers = async (req:AuthRequest, res: Response):Promise<void> => {
+    const respose:GetUsers = await userManager.getAllFollowers(req).catch((err: Error) => {
+        return { status: 500, value: err.message }
+    })
+    res.status(respose.status).json(respose.value)
+}
+
 export const changeToManager = async (req:AuthRequest, res: Response):Promise<void> => {
     const respose:UpdateUser = await userManager.changeToManager(req).catch((err: Error) => {
         return { status: 500, value: err.message }
